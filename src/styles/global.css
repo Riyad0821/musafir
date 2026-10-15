@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @layer base {
   :root {
     --bg-base: #fbf9f4;
@@ -17,7 +19,7 @@
     --card-shadow: 0 4px 20px -2px rgba(18, 40, 39, 0.05);
   }
 
-  html.dark {
+  html.dark, :root.dark, body.dark {
     --bg-base: #0a1117;
     --bg-surface: #101c26;
     --bg-subtle: #162432;
@@ -36,7 +38,7 @@
   body {
     background-color: var(--bg-base);
     color: var(--text-primary);
-    font-family: var(--font-sans, system-ui, sans-serif);
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
     transition: background-color 0.25s ease, color 0.25s ease;
     min-height: 100vh;
     display: flex;
