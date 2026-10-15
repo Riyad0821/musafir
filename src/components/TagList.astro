@@ -1,0 +1,35 @@
+---
+import tagsData from '../data/tags.json';
+
+export interface Props {
+  tags: string[];
+  class?: string;
+  size?: 'sm' | 'md';
+}
+
+const { tags = [], class: className = '', size = 'sm' } = Astro.props;
+
+const tagRecord = tagsData as Record<string, { name: string; description: string }>;
+
+const sizeClasses = {
+  sm: 'text-xs px-2.5 py-1',
+  md: 'text-sm px-3 py-1.5',
+}[size];
+---
+
+{tags && tags.length > 0 && (
+  <div class={`flex flex-wrap items-center gap-1.5 ${className}`} aria-label="Tags">
+    {tags.map((tag) => {
+      const displayName = tagRecord[tag]?.name || tag.replace(/-/g, ' ');
+      return (
+        <a
+          href={`/tags/${tag}`}
+          class={`inline-flex items-center gap-1 rounded-full font-medium transition-colors bg-[var(--bg-subtle)] text-[var(--text-secondary)] hover:bg-[var(--accent-gold-subtle)] hover:text-[var(--accent-gold)] border border-[var(--border-subtle)]/70 ${sizeClasses}`}
+        >
+          <span class="text-[var(--accent-gold)] opacity-70">#</span>
+          <span>{displayName}</span>
+        </a>
+      );
+    })}
+  </div>
+)}

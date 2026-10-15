@@ -1,0 +1,84 @@
+---
+import Layout from '../../../components/Layout.astro';
+import EntryCard from '../../../components/EntryCard.astro';
+import Breadcrumbs from '../../../components/Breadcrumbs.astro';
+import Pagination from '../../../components/Pagination.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const allWritings = await getCollection('writings', ({ data }) => !data.draft);
+  allWritings.sort((a, b) => new Date(b.data.dateAdded).getTime() - new Date(a.data.dateAdded).getTime());
+  
+  const pageSize = 12;
+  const totalPages = Math.ceil(allWritings.length / pageSize);
+
+  if (totalPages <= 1) return [];
+
+  const paths = [];
+  for (let p = 2; p <= totalPages; p++) {
+    const startIndex = (p - 1) * pageSize;
+    const entries = allWritings.slice(startIndex, startIndex + pageSize);
+    paths.push({
+      params: { page: String(p) },
+      props: {
+        entries,
+        currentPage: p,
+        totalPages,
+      },
+    });
+  }
+  return paths;
+}
+
+const { entries, currentPage, totalPages } = Astro.props;
+const prevUrl = currentPage === 2 ? '/writings' : `/writings/page/${currentPage - 1}`;
+const nextUrl = currentPage < totalPages ? `/writings/page/${currentPage + 1}` : undefined;
+---
+
+<Layout
+  seo={{
+    title: `Writings & Reflections — Page ${currentPage}`,
+    description: `Page ${currentPage} of curated writings, quotes, and reflections.`,
+    breadcrumbs: [
+      { name: 'Writings', url: '/writings' },
+      { name: `Page ${currentPage}`, url: `/writings/page/${currentPage}` }
+    ],
+  }}
+>
+  <Breadcrumbs
+    items={[
+      { name: 'Writings', url: '/writings' },
+      { name: `Page ${currentPage}`, url: `/writings/page/${currentPage}` },
+    ]}
+  />
+
+  <header class="py-8 md:py-12 border-b border-[var(--border-subtle)] mb-8">
+    <div class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[var(--accent-gold)] mb-3">
+      <span>Collection</span>
+      <span>•</span>
+      <span>Page {currentPage} of {totalPages}</span>
+    </div>
+
+    <h1 class="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-[var(--text-primary)]">
+      Writings & Reflections
+    </h1>
+  </header>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {entries.map((entry: any) => (
+      <EntryCard
+        collection="writings"
+        slug={entry.id}
+        data={entry.data}
+      />
+    ))}
+  </div>
+
+  <Pagination
+    currentPage={currentPage}
+    lastPage={totalPages}
+    prevUrl={prevUrl}
+    nextUrl={nextUrl}
+    baseUrl="/writings"
+  />
+</Layout>

@@ -1,0 +1,84 @@
+---
+import Layout from '../../../components/Layout.astro';
+import EntryCard from '../../../components/EntryCard.astro';
+import Breadcrumbs from '../../../components/Breadcrumbs.astro';
+import Pagination from '../../../components/Pagination.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const allEvents = await getCollection('events', ({ data }) => !data.draft);
+  allEvents.sort((a, b) => new Date(b.data.dateAdded).getTime() - new Date(a.data.dateAdded).getTime());
+  
+  const pageSize = 12;
+  const totalPages = Math.ceil(allEvents.length / pageSize);
+
+  if (totalPages <= 1) return [];
+
+  const paths = [];
+  for (let p = 2; p <= totalPages; p++) {
+    const startIndex = (p - 1) * pageSize;
+    const entries = allEvents.slice(startIndex, startIndex + pageSize);
+    paths.push({
+      params: { page: String(p) },
+      props: {
+        entries,
+        currentPage: p,
+        totalPages,
+      },
+    });
+  }
+  return paths;
+}
+
+const { entries, currentPage, totalPages } = Astro.props;
+const prevUrl = currentPage === 2 ? '/events' : `/events/page/${currentPage - 1}`;
+const nextUrl = currentPage < totalPages ? `/events/page/${currentPage + 1}` : undefined;
+---
+
+<Layout
+  seo={{
+    title: `Islamic Events — Page ${currentPage}`,
+    description: `Page ${currentPage} of Islamic historical events and milestones.`,
+    breadcrumbs: [
+      { name: 'Islamic Events', url: '/events' },
+      { name: `Page ${currentPage}`, url: `/events/page/${currentPage}` }
+    ],
+  }}
+>
+  <Breadcrumbs
+    items={[
+      { name: 'Events', url: '/events' },
+      { name: `Page ${currentPage}`, url: `/events/page/${currentPage}` },
+    ]}
+  />
+
+  <header class="py-8 md:py-12 border-b border-[var(--border-subtle)] mb-8">
+    <div class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[var(--accent-gold)] mb-3">
+      <span>Collection</span>
+      <span>•</span>
+      <span>Page {currentPage} of {totalPages}</span>
+    </div>
+
+    <h1 class="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-[var(--text-primary)]">
+      Islamic Events
+    </h1>
+  </header>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {entries.map((entry: any) => (
+      <EntryCard
+        collection="events"
+        slug={entry.id}
+        data={entry.data}
+      />
+    ))}
+  </div>
+
+  <Pagination
+    currentPage={currentPage}
+    lastPage={totalPages}
+    prevUrl={prevUrl}
+    nextUrl={nextUrl}
+    baseUrl="/events"
+  />
+</Layout>

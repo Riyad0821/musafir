@@ -1,0 +1,216 @@
+---
+import Layout from '../../components/Layout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import EntryCard from '../../components/EntryCard.astro';
+import { getCollection } from 'astro:content';
+import tagsData from '../../data/tags.json';
+
+export async function getStaticPaths() {
+  const [ayat, hadith, events, sahaba, writings] = await Promise.all([
+    getCollection('ayat', ({ data }) => !data.draft),
+    getCollection('hadith', ({ data }) => !data.draft),
+    getCollection('events', ({ data }) => !data.draft),
+    getCollection('sahaba', ({ data }) => !data.draft),
+    getCollection('writings', ({ data }) => !data.draft),
+  ]);
+
+  const tagRecord = tagsData as Record<string, { name: string; description: string }>;
+  const tagSet = new Set<string>(Object.keys(tagRecord));
+
+  const addTags = (items: any[]) => {
+    for (const item of items) {
+      for (const t of item.data.tags || []) {
+        tagSet.add(t);
+      }
+    }
+  };
+
+  addTags(ayat);
+  addTags(hadith);
+  addTags(events);
+  addTags(sahaba);
+  addTags(writings);
+
+  return Array.from(tagSet).map((tag) => {
+    const matchingAyat = ayat.filter((e) => e.data.tags?.includes(tag));
+    const matchingHadith = hadith.filter((e) => e.data.tags?.includes(tag));
+    const matchingEvents = events.filter((e) => e.data.tags?.includes(tag));
+    const matchingSahaba = sahaba.filter((e) => e.data.tags?.includes(tag));
+    const matchingWritings = writings.filter((e) => e.data.tags?.includes(tag));
+
+    return {
+      params: { tag },
+      props: {
+        tag,
+        tagInfo: tagRecord[tag] || {
+          name: tag.replace(/-/g, ' '),
+          description: `Curated reflections and historical accounts corresponding to ${tag}.`,
+        },
+        matchingAyat,
+        matchingHadith,
+        matchingEvents,
+        matchingSahaba,
+        matchingWritings,
+        totalCount:
+          matchingAyat.length +
+          matchingHadith.length +
+          matchingEvents.length +
+          matchingSahaba.length +
+          matchingWritings.length,
+      },
+    };
+  });
+}
+
+const {
+  tag,
+  tagInfo,
+  matchingAyat,
+  matchingHadith,
+  matchingEvents,
+  matchingSahaba,
+  matchingWritings,
+  totalCount,
+} = Astro.props;
+---
+
+<Layout
+  seo={{
+    title: `${tagInfo.name} — Reflections & Records`,
+    description: tagInfo.description,
+    breadcrumbs: [
+      { name: 'Tags', url: '/tags' },
+      { name: tagInfo.name, url: `/tags/${tag}` },
+    ],
+  }}
+>
+  <Breadcrumbs
+    items={[
+      { name: 'Tags', url: '/tags' },
+      { name: tagInfo.name, url: `/tags/${tag}` },
+    ]}
+  />
+
+  <!-- Tag Hub Header -->
+  <header class="py-8 md:py-12 border-b border-[var(--border-subtle)] mb-10">
+    <div class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[var(--accent-gold)] mb-3">
+      <span>Topic Hub</span>
+      <span>•</span>
+      <span>{totalCount} {totalCount === 1 ? 'Entry' : 'Entries'}</span>
+    </div>
+
+    <h1 class="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-[var(--text-primary)]">
+      #{tagInfo.name}
+    </h1>
+
+    <!-- 2-3 sentence introductory paragraph from tags.json -->
+    <div class="mt-4 p-5 sm:p-6 rounded-2xl bg-[var(--bg-subtle)]/70 border-l-4 border-[var(--accent-gold)] text-base sm:text-lg text-[var(--text-secondary)] leading-relaxed max-w-3xl">
+      {tagInfo.description}
+    </div>
+  </header>
+
+  <!-- Empty State if no entries yet -->
+  {totalCount === 0 && (
+    <div class="text-center py-12 p-8 rounded-2xl bg-[var(--bg-subtle)]/30 border border-[var(--border-subtle)]">
+      <p class="font-serif text-lg text-[var(--text-primary)]">No reflections under this theme yet</p>
+      <p class="text-xs text-[var(--text-muted)] mt-1">Entries tagged with #{tag} will automatically appear here once added.</p>
+    </div>
+  )}
+
+  <div class="space-y-16">
+    <!-- Group: Ayat -->
+    {matchingAyat.length > 0 && (
+      <section aria-labelledby="ayat-group-heading">
+        <div class="flex items-center justify-between border-b border-[var(--border-subtle)] pb-3 mb-6">
+          <h2 id="ayat-group-heading" class="font-serif text-2xl font-bold text-[var(--text-primary)] flex items-center gap-2">
+            <span>📖</span>
+            <span>Quranic Ayat</span>
+            <span class="text-sm font-normal text-[var(--text-muted)]">({matchingAyat.length})</span>
+          </h2>
+          <a href="/ayat" class="text-xs text-[var(--accent-gold)] hover:underline">View all Ayat →</a>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {matchingAyat.map((entry) => (
+            <EntryCard collection="ayat" slug={entry.id} data={entry.data} />
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- Group: Hadith -->
+    {matchingHadith.length > 0 && (
+      <section aria-labelledby="hadith-group-heading">
+        <div class="flex items-center justify-between border-b border-[var(--border-subtle)] pb-3 mb-6">
+          <h2 id="hadith-group-heading" class="font-serif text-2xl font-bold text-[var(--text-primary)] flex items-center gap-2">
+            <span>✨</span>
+            <span>Prophetic Hadith</span>
+            <span class="text-sm font-normal text-[var(--text-muted)]">({matchingHadith.length})</span>
+          </h2>
+          <a href="/hadith" class="text-xs text-[var(--accent-gold)] hover:underline">View all Hadith →</a>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {matchingHadith.map((entry) => (
+            <EntryCard collection="hadith" slug={entry.id} data={entry.data} />
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- Group: Events -->
+    {matchingEvents.length > 0 && (
+      <section aria-labelledby="events-group-heading">
+        <div class="flex items-center justify-between border-b border-[var(--border-subtle)] pb-3 mb-6">
+          <h2 id="events-group-heading" class="font-serif text-2xl font-bold text-[var(--text-primary)] flex items-center gap-2">
+            <span>🗓️</span>
+            <span>Islamic Events</span>
+            <span class="text-sm font-normal text-[var(--text-muted)]">({matchingEvents.length})</span>
+          </h2>
+          <a href="/events" class="text-xs text-[var(--accent-gold)] hover:underline">View all Events →</a>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {matchingEvents.map((entry) => (
+            <EntryCard collection="events" slug={entry.id} data={entry.data} />
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- Group: Sahaba -->
+    {matchingSahaba.length > 0 && (
+      <section aria-labelledby="sahaba-group-heading">
+        <div class="flex items-center justify-between border-b border-[var(--border-subtle)] pb-3 mb-6">
+          <h2 id="sahaba-group-heading" class="font-serif text-2xl font-bold text-[var(--text-primary)] flex items-center gap-2">
+            <span>👥</span>
+            <span>Lives of the Sahaba</span>
+            <span class="text-sm font-normal text-[var(--text-muted)]">({matchingSahaba.length})</span>
+          </h2>
+          <a href="/sahaba" class="text-xs text-[var(--accent-gold)] hover:underline">View all Sahaba →</a>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {matchingSahaba.map((entry) => (
+            <EntryCard collection="sahaba" slug={entry.id} data={entry.data} />
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- Group: Writings -->
+    {matchingWritings.length > 0 && (
+      <section aria-labelledby="writings-group-heading">
+        <div class="flex items-center justify-between border-b border-[var(--border-subtle)] pb-3 mb-6">
+          <h2 id="writings-group-heading" class="font-serif text-2xl font-bold text-[var(--text-primary)] flex items-center gap-2">
+            <span>✍️</span>
+            <span>Writings & Reflections</span>
+            <span class="text-sm font-normal text-[var(--text-muted)]">({matchingWritings.length})</span>
+          </h2>
+          <a href="/writings" class="text-xs text-[var(--accent-gold)] hover:underline">View all Writings →</a>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {matchingWritings.map((entry) => (
+            <EntryCard collection="writings" slug={entry.id} data={entry.data} />
+          ))}
+        </div>
+      </section>
+    )}
+  </div>
+</Layout>

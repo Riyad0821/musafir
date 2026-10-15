@@ -1,0 +1,83 @@
+---
+import { getCollection } from 'astro:content';
+import EntryCard from './EntryCard.astro';
+
+export interface Props {
+  currentCollection: 'ayat' | 'hadith' | 'events' | 'sahaba' | 'writings';
+  currentSlug: string;
+  tags: string[];
+  maxCount?: number;
+}
+
+const { currentCollection, currentSlug, tags = [], maxCount = 3 } = Astro.props;
+
+// Fetch all collections
+const [allAyat, allHadith, allEvents, allSahaba, allWritings] = await Promise.all([
+  getCollection('ayat', ({ data }) => !data.draft),
+  getCollection('hadith', ({ data }) => !data.draft),
+  getCollection('events', ({ data }) => !data.draft),
+  getCollection('sahaba', ({ data }) => !data.draft),
+  getCollection('writings', ({ data }) => !data.draft),
+]);
+
+interface Candidate {
+  collection: 'ayat' | 'hadith' | 'events' | 'sahaba' | 'writings';
+  slug: string;
+  data: any;
+  score: number;
+}
+
+const candidates: Candidate[] = [];
+
+const processList = (list: any[], collName: 'ayat' | 'hadith' | 'events' | 'sahaba' | 'writings') => {
+  for (const entry of list) {
+    const slug = entry.id;
+    if (collName === currentCollection && slug === currentSlug) continue;
+    
+    const entryTags: string[] = entry.data.tags || [];
+    const shared = entryTags.filter((t) => tags.includes(t));
+    if (shared.length > 0) {
+      candidates.push({
+        collection: collName,
+        slug,
+        data: entry.data,
+        score: shared.length + (collName === currentCollection ? 0.5 : 0),
+      });
+    }
+  }
+};
+
+processList(allAyat, 'ayat');
+processList(allHadith, 'hadith');
+processList(allEvents, 'events');
+processList(allSahaba, 'sahaba');
+processList(allWritings, 'writings');
+
+candidates.sort((a, b) => b.score - a.score);
+const related = candidates.slice(0, maxCount);
+---
+
+{related.length > 0 && (
+  <section class="mt-16 pt-12 border-t border-[var(--border-subtle)]" aria-labelledby="related-heading">
+    <div class="flex items-center justify-between mb-8">
+      <div>
+        <h2 id="related-heading" class="font-serif text-2xl font-semibold text-[var(--text-primary)]">
+          Related Reflections & Encounters
+        </h2>
+        <p class="text-sm text-[var(--text-muted)] mt-1">
+          Connected through shared themes and spiritual markers
+        </p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {related.map((item) => (
+        <EntryCard
+          collection={item.collection}
+          slug={item.slug}
+          data={item.data}
+        />
+      ))}
+    </div>
+  </section>
+)}

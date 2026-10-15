@@ -1,0 +1,123 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-base: #fbf9f4;
+    --bg-surface: #ffffff;
+    --bg-subtle: #f4efe4;
+    --text-primary: #122827;
+    --text-secondary: #4a5c5a;
+    --text-muted: #748381;
+    --border-subtle: #e8e1d3;
+    --border-strong: #d2c8b4;
+    --accent-gold: #b88d2d;
+    --accent-gold-hover: #9c7520;
+    --accent-gold-subtle: #f9f4e8;
+    --primary-teal: #103433;
+    --card-shadow: 0 4px 20px -2px rgba(18, 40, 39, 0.05);
+  }
+
+  html.dark {
+    --bg-base: #0a1117;
+    --bg-surface: #101c26;
+    --bg-subtle: #162432;
+    --text-primary: #f2eee5;
+    --text-secondary: #abbec5;
+    --text-muted: #788e99;
+    --border-subtle: #1e3243;
+    --border-strong: #2c445a;
+    --accent-gold: #deb453;
+    --accent-gold-hover: #f0c96c;
+    --accent-gold-subtle: #1a251f;
+    --primary-teal: #3ba79f;
+    --card-shadow: 0 4px 25px -2px rgba(0, 0, 0, 0.35);
+  }
+
+  body {
+    background-color: var(--bg-base);
+    color: var(--text-primary);
+    font-family: var(--font-sans, system-ui, sans-serif);
+    transition: background-color 0.25s ease, color 0.25s ease;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+/* Custom Arabic Typography Rules */
+.arabic-text {
+  font-family: 'Amiri', 'Traditional Arabic', 'Scheherazade New', serif;
+  font-feature-settings: "cv01" 1, "cv02" 1;
+  font-variant-ligatures: contextual;
+  line-height: 2.1;
+  word-spacing: 0.15em;
+  direction: rtl;
+  text-align: right;
+  letter-spacing: normal;
+  text-rendering: optimizeLegibility;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+
+/* Content prose container */
+.reading-prose {
+  max-width: 68ch;
+  line-height: 1.8;
+  font-size: 1.0625rem;
+}
+
+.reading-prose p {
+  margin-bottom: 1.4em;
+}
+
+.reading-prose h2 {
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin-top: 2.2em;
+  margin-bottom: 0.8em;
+  color: var(--text-primary);
+}
+
+.reading-prose h3 {
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: 1.35rem;
+  font-weight: 600;
+  margin-top: 1.8em;
+  margin-bottom: 0.6em;
+  color: var(--text-primary);
+}
+
+.reading-prose blockquote {
+  border-left: 3px solid var(--accent-gold);
+  padding-left: 1.25rem;
+  margin: 1.6rem 0;
+  font-style: italic;
+  color: var(--text-secondary);
+}
+
+.reading-prose ul, .reading-prose ol {
+  margin: 1.2em 0;
+  padding-left: 1.6em;
+}
+
+.reading-prose ul {
+  list-style-type: disc;
+}
+
+.reading-prose ol {
+  list-style-type: decimal;
+}
+
+.reading-prose li {
+  margin-bottom: 0.5em;
+}
+
+/* Skip link focus */
+.skip-link:focus {
+  top: 1rem;
+  left: 1rem;
+  z-index: 9999;
+}

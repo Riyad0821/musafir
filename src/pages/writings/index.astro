@@ -1,0 +1,78 @@
+---
+import Layout from '../../components/Layout.astro';
+import EntryCard from '../../components/EntryCard.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import Pagination from '../../components/Pagination.astro';
+import { getCollection } from 'astro:content';
+import tagsData from '../../data/tags.json';
+
+const allWritings = await getCollection('writings', ({ data }) => !data.draft);
+allWritings.sort((a, b) => new Date(b.data.dateAdded).getTime() - new Date(a.data.dateAdded).getTime());
+
+const uniqueTags = Array.from(new Set(allWritings.flatMap((item) => item.data.tags || [])));
+const tagRecord = tagsData as Record<string, { name: string; description: string }>;
+
+const pageSize = 12;
+const totalPages = Math.ceil(allWritings.length / pageSize) || 1;
+const currentPage = 1;
+const paginatedEntries = allWritings.slice(0, pageSize);
+---
+
+<Layout
+  seo={{
+    title: 'Writings & Reflections — Articles, Quotes & Poems',
+    description: 'Personal reflections, classical wisdom excerpts, articles, and poetry for contemplation.',
+    breadcrumbs: [
+      { name: 'Writings', url: '/writings' }
+    ],
+  }}
+>
+  <Breadcrumbs items={[{ name: 'Writings', url: '/writings' }]} />
+
+  <header class="py-8 md:py-12 border-b border-[var(--border-subtle)] mb-8">
+    <div class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[var(--accent-gold)] mb-3">
+      <span>Collection</span>
+      <span>•</span>
+      <span>{allWritings.length} {allWritings.length === 1 ? 'Entry' : 'Entries'}</span>
+    </div>
+
+    <h1 class="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-[var(--text-primary)]">
+      Writings & Reflections
+    </h1>
+
+    <p class="mt-3 text-base sm:text-lg text-[var(--text-secondary)] max-w-2xl leading-relaxed">
+      Curated quotes, personal contemplations, spiritual essays, and poetry drawn from classical scholars and personal moments of introspection.
+    </p>
+
+    {uniqueTags.length > 0 && (
+      <div class="mt-6 flex flex-wrap items-center gap-2">
+        <span class="text-xs text-[var(--text-muted)] font-medium mr-1">Filter by tag:</span>
+        {uniqueTags.map((tag) => (
+          <a
+            href={`/tags/${tag}`}
+            class="text-xs px-3 py-1 rounded-full bg-[var(--bg-subtle)] text-[var(--text-secondary)] hover:bg-[var(--accent-gold-subtle)] hover:text-[var(--accent-gold)] border border-[var(--border-subtle)] transition-colors"
+          >
+            #{tagRecord[tag]?.name || tag}
+          </a>
+        ))}
+      </div>
+    )}
+  </header>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {paginatedEntries.map((entry) => (
+      <EntryCard
+        collection="writings"
+        slug={entry.id}
+        data={entry.data}
+      />
+    ))}
+  </div>
+
+  <Pagination
+    currentPage={currentPage}
+    lastPage={totalPages}
+    nextUrl={totalPages > 1 ? '/writings/page/2' : undefined}
+    baseUrl="/writings"
+  />
+</Layout>

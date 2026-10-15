@@ -1,0 +1,116 @@
+---
+import Layout from '../components/Layout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { SITE_CONFIG } from '../config';
+---
+
+<Layout
+  seo={{
+    title: 'About Musafir — Philosophy & Sourcing Policy',
+    description: 'The purpose, sourcing standards, authenticity principles, and editorial policy behind the Musafir notebook.',
+    breadcrumbs: [{ name: 'About', url: '/about' }],
+  }}
+>
+  <div class="max-w-3xl mx-auto">
+    <Breadcrumbs items={[{ name: 'About', url: '/about' }]} />
+
+    <header class="py-8 md:py-12 border-b border-[var(--border-subtle)] mb-10">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider bg-[var(--accent-gold-subtle)] text-[var(--accent-gold)] border border-[var(--accent-gold)]/30 mb-3">
+        Philosophy & Purpose
+      </div>
+      <h1 class="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-[var(--text-primary)]">
+        About Musafir
+      </h1>
+      <p class="font-serif italic text-lg sm:text-xl text-[var(--text-secondary)] mt-3">
+        "{SITE_CONFIG.tagline}"
+      </p>
+    </header>
+
+    <article class="reading-prose space-y-8 text-[var(--text-secondary)]">
+      <section>
+        <h2 class="text-2xl font-serif font-bold text-[var(--text-primary)] mb-4">
+          The Idea of the Traveler (المُسَافِر)
+        </h2>
+        <p>
+          In a famous prophetic tradition, the Prophet Muhammad ﷺ advised Abdullah ibn Umar (may Allah be pleased with them both):
+        </p>
+        <blockquote class="italic border-l-3 border-[var(--accent-gold)] pl-4 my-4 text-[var(--text-primary)]">
+          "Be in this world as though you were a stranger or a traveler passing through a path."
+          <span class="block text-xs text-[var(--text-muted)] mt-1 font-sans not-italic">— Sahih al-Bukhari 6416</span>
+        </blockquote>
+        <p>
+          A traveler carries only what is beneficial for the road. In an era overwhelmed by sensory noise and ephemeral content, <strong>Musafir</strong> serves as a calm, contemplative way-station: a curated personal notebook of divine revelation, prophetic wisdom, historical memory, and moral reflection.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-serif font-bold text-[var(--text-primary)] mb-4">
+          Core Sourcing & Authenticity Policy
+        </h2>
+        <p>
+          Authenticity and accurate attribution are the foundational pillars of this site. Every single entry must visibly state its source, context, and reference:
+        </p>
+        
+        <div class="space-y-4 my-6">
+          <div class="p-5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-subtle)]">
+            <h3 class="font-serif font-semibold text-base text-[var(--text-primary)] mb-1">
+              1. Quranic Ayat
+            </h3>
+            <p class="text-sm">
+              All Arabic Quranic texts follow verified Uthmani script standards with intact tashkeel (diacritical marks). English translations are drawn from reputable academic and scholarly sources (such as Saheeh International, M.A.S. Abdel Haleem, or The Clear Quran) and are explicitly cited by surah and ayah number.
+            </p>
+          </div>
+
+          <div class="p-5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-subtle)]">
+            <h3 class="font-serif font-semibold text-base text-[var(--text-primary)] mb-1">
+              2. Prophetic Hadith
+            </h3>
+            <p class="text-sm">
+              Traditions are taken from established canonical collections (e.g., the Kutub as-Sittah). Every hadith entry visibly displays the primary Sahabi narrator, the canonical book and hadith number, the translation source, and recognized scholarly grading (e.g., <em>Sahih</em> or <em>Hasan</em>). Unverified or fabricated narrations are strictly excluded.
+            </p>
+          </div>
+
+          <div class="p-5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-subtle)]">
+            <h3 class="font-serif font-semibold text-base text-[var(--text-primary)] mb-1">
+              3. Events & Sahaba Accounts
+            </h3>
+            <p class="text-sm">
+              Historical accounts and biographical narratives are cross-referenced with early chronicles (such as Ibn Hisham's <em>As-Seerah an-Nabawiyyah</em>, Ibn Kathir's <em>Al-Bidayah wan-Nihayah</em>, and Al-Dhahabi's <em>Siyar A'lam an-Nubala</em>), providing both Hijri and Gregorian dates.
+            </p>
+          </div>
+
+          <div class="p-5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-subtle)]">
+            <h3 class="font-serif font-semibold text-base text-[var(--text-primary)] mb-1">
+              4. Writings & Reflections
+            </h3>
+            <p class="text-sm">
+              Wisdom literature, spiritual aphorisms, and poetry are attributed to their original authors and classic works (e.g., Ibn al-Qayyim, Hasan al-Basri, Imam al-Ghazali) with transparent distinction between original texts and personal reflections.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Legal / Fatwa Disclaimer -->
+      <section class="p-6 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-[var(--text-primary)]">
+        <h2 class="font-serif text-lg font-bold text-amber-800 dark:text-amber-300 mb-2 flex items-center gap-2">
+          <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+          </svg>
+          Important Reader Notice
+        </h2>
+        <p class="text-sm leading-relaxed text-[var(--text-secondary)]">
+          Musafir is an individual’s personal, curated notebook created solely for contemplation, spiritual uplifting, and remembrance. <strong>It is not an institution of jurisprudence, nor does it provide legal verdicts (fatawa).</strong> Readers seeking rulings on complex legal, family, or contractual matters should consult qualified, trusted local scholars and authorized Islamic legal bodies.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-serif font-bold text-[var(--text-primary)] mb-4">
+          Architecture & Privacy
+        </h2>
+        <p>
+          Musafir is engineered as an ultra-fast, static website with zero third-party tracking scripts, zero databases, and zero server-side state. All writings reside as transparent Markdown files in the repository, and full-text search operates entirely in your browser using Pagefind.
+        </p>
+      </section>
+    </article>
+  </div>
+</Layout>

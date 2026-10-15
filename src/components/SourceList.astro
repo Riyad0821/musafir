@@ -1,0 +1,76 @@
+---
+export interface Props {
+  sources?: string[];
+  reference?: string;
+  translationSource?: string;
+  grading?: string;
+  narrator?: string;
+  class?: string;
+}
+
+const {
+  sources = [],
+  reference,
+  translationSource,
+  grading,
+  narrator,
+  class: className = '',
+} = Astro.props;
+---
+
+<div class={`rounded-xl p-4 md:p-5 bg-[var(--bg-surface)] border border-[var(--border-subtle)] space-y-3 ${className}`}>
+  <div class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[var(--accent-gold)]">
+    <!-- Quill / Verification Icon -->
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+    </svg>
+    <span>Authenticity & Sources</span>
+  </div>
+
+  <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-sm">
+    {reference && (
+      <div>
+        <dt class="text-xs text-[var(--text-muted)]">Reference</dt>
+        <dd class="font-medium text-[var(--text-primary)]">{reference}</dd>
+      </div>
+    )}
+
+    {narrator && (
+      <div>
+        <dt class="text-xs text-[var(--text-muted)]">Narrated By</dt>
+        <dd class="font-medium text-[var(--text-primary)]">{narrator}</dd>
+      </div>
+    )}
+
+    {grading && (
+      <div>
+        <dt class="text-xs text-[var(--text-muted)]">Scholarly Grading</dt>
+        <dd class="inline-flex items-center gap-1.5 font-medium text-[var(--text-primary)]">
+          <span class="inline-block w-2 h-2 rounded-full bg-emerald-500"></span>
+          <span>{grading}</span>
+        </dd>
+      </div>
+    )}
+
+    {translationSource && (
+      <div>
+        <dt class="text-xs text-[var(--text-muted)]">Translation Source</dt>
+        <dd class="font-medium text-[var(--text-primary)]">{translationSource}</dd>
+      </div>
+    )}
+
+    {sources && sources.length > 0 && (
+      <div class="sm:col-span-2">
+        <dt class="text-xs text-[var(--text-muted)] mb-1">Historical & Biographical Citations</dt>
+        <dd class="space-y-1">
+          {sources.map((src) => (
+            <div class="flex items-start gap-2 text-xs text-[var(--text-secondary)]">
+              <span class="text-[var(--accent-gold)] mt-0.5">•</span>
+              <span>{src}</span>
+            </div>
+          ))}
+        </dd>
+      </div>
+    )}
+  </dl>
+</div>

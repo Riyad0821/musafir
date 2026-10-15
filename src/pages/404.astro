@@ -1,0 +1,47 @@
+---
+import Layout from '../components/Layout.astro';
+---
+
+<Layout
+  seo={{
+    title: '404 — Path Not Found',
+    description: 'The requested path or reflection could not be found.',
+    noindex: true,
+  }}
+>
+  <div class="text-center py-16 md:py-28 max-w-xl mx-auto px-4">
+    <!-- Desert / Compass Motif -->
+    <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-[var(--accent-gold-subtle)] text-[var(--accent-gold)] mb-6 border border-[var(--accent-gold)]/30">
+      <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 2a10 10 0 100 20 10 10 0 000-20zm0 18a8 8 0 110-16 8 8 0 010 16zm-1-13l3.5 3.5L11 11l-3.5-3.5L11 7z"></path>
+      </svg>
+    </div>
+
+    <span class="text-xs font-bold uppercase tracking-widest text-[var(--accent-gold)] block mb-2">
+      404 Error
+    </span>
+
+    <h1 class="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-[var(--text-primary)]">
+      An Uncharted Path
+    </h1>
+
+    <p class="font-serif italic text-base sm:text-lg text-[var(--text-secondary)] mt-4 leading-relaxed">
+      "The traveler occasionally takes a turn that leads to quiet desert sands. The reflection you seek does not exist or has been relocated."
+    </p>
+
+    <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
+      <a
+        href="/"
+        class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[var(--text-primary)] text-[var(--bg-base)] hover:bg-[var(--accent-gold)] transition-colors text-sm font-medium shadow-sm"
+      >
+        Return to Home
+      </a>
+      <a
+        href="/search"
+        class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-[var(--border-subtle)] hover:border-[var(--accent-gold)] transition-colors text-sm font-medium shadow-xs"
+      >
+        Search Notebook
+      </a>
+    </div>
+  </div>
+</Layout>

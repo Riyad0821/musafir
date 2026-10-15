@@ -1,0 +1,191 @@
+---
+import Layout from '../components/Layout.astro';
+import EntryCard from '../components/EntryCard.astro';
+import { getCollection } from 'astro:content';
+import { SITE_CONFIG } from '../config';
+
+// Load entries from all collections
+const [ayat, hadith, events, sahaba, writings] = await Promise.all([
+  getCollection('ayat', ({ data }) => !data.draft),
+  getCollection('hadith', ({ data }) => !data.draft),
+  getCollection('events', ({ data }) => !data.draft),
+  getCollection('sahaba', ({ data }) => !data.draft),
+  getCollection('writings', ({ data }) => !data.draft),
+]);
+
+// Find a featured entry (priority: any with featured: true)
+const allEntries = [
+  ...ayat.map((e) => ({ collection: 'ayat' as const, slug: e.id, data: e.data })),
+  ...hadith.map((e) => ({ collection: 'hadith' as const, slug: e.id, data: e.data })),
+  ...events.map((e) => ({ collection: 'events' as const, slug: e.id, data: e.data })),
+  ...sahaba.map((e) => ({ collection: 'sahaba' as const, slug: e.id, data: e.data })),
+  ...writings.map((e) => ({ collection: 'writings' as const, slug: e.id, data: e.data })),
+];
+
+allEntries.sort((a, b) => new Date(b.data.dateAdded).getTime() - new Date(a.data.dateAdded).getTime());
+
+const featuredEntry = allEntries.find((e) => e.data.featured) || allEntries[0];
+const latestEntries = allEntries.slice(0, 6);
+
+const collectionStats = [
+  { id: 'ayat', label: 'Quranic Ayat', count: ayat.length, href: '/ayat', desc: 'Direct divine reminders & guidance', icon: '📖' },
+  { id: 'hadith', label: 'Prophetic Hadith', count: hadith.length, href: '/hadith', desc: 'Traditions, guidance & sayings', icon: '✨' },
+  { id: 'events', label: 'Islamic Events', count: events.length, href: '/events', desc: 'Milestones, eras & chronology', icon: '🗓️' },
+  { id: 'sahaba', label: 'The Sahaba', count: sahaba.length, href: '/sahaba', desc: 'Stories of faith & steadfastness', icon: '👥' },
+  { id: 'writings', label: 'Writings & Quotes', count: writings.length, href: '/writings', desc: 'Contemplative articles & poetry', icon: '✍️' },
+];
+---
+
+<Layout
+  seo={{
+    title: undefined, // uses Musafir - Tagline
+    description: SITE_CONFIG.description,
+    schemaType: 'website',
+  }}
+>
+  <!-- Hero Section -->
+  <section class="text-center py-10 md:py-20 relative">
+    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium bg-[var(--accent-gold-subtle)] text-[var(--accent-gold)] border border-[var(--accent-gold)]/30 mb-6">
+      <span class="arabic-text text-sm" dir="rtl" lang="ar">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</span>
+    </div>
+
+    <h1 class="font-serif text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-[var(--text-primary)] max-w-3xl mx-auto leading-tight">
+      {SITE_CONFIG.name}
+    </h1>
+
+    <p class="font-serif italic text-lg sm:text-2xl text-[var(--text-secondary)] mt-4 max-w-2xl mx-auto leading-relaxed">
+      "{SITE_CONFIG.tagline}"
+    </p>
+
+    <p class="text-sm sm:text-base text-[var(--text-muted)] mt-4 max-w-xl mx-auto leading-relaxed">
+      A serene, personal sanctuary gathering favorite Quranic revelations, prophetic narrations, historical moments, and contemplations for the spiritual wayfarer.
+    </p>
+
+    <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
+      <a
+        href="/search"
+        class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[var(--text-primary)] text-[var(--bg-base)] hover:bg-[var(--accent-gold)] transition-colors text-sm font-medium shadow-sm"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+        Search the Notebook
+      </a>
+      <a
+        href="/about"
+        class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-[var(--border-subtle)] hover:border-[var(--accent-gold)] transition-colors text-sm font-medium shadow-xs"
+      >
+        About & Sourcing Policy
+      </a>
+    </div>
+  </section>
+
+  <!-- Featured Entry Block -->
+  {featuredEntry && (
+    <section class="my-12" aria-labelledby="featured-entry-heading">
+      <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-[var(--accent-gold)] animate-pulse"></span>
+          <h2 id="featured-entry-heading" class="text-xs font-bold uppercase tracking-wider text-[var(--accent-gold)]">
+            Featured Reflection
+          </h2>
+        </div>
+        <span class="text-xs text-[var(--text-muted)]">Highlighted for contemplation</span>
+      </div>
+
+      <div class="relative">
+        <EntryCard
+          collection={featuredEntry.collection}
+          slug={featuredEntry.slug}
+          data={featuredEntry.data}
+          featured={true}
+        />
+      </div>
+    </section>
+  )}
+
+  <!-- Section Portals -->
+  <section class="my-16" aria-labelledby="collections-heading">
+    <div class="flex items-center justify-between mb-8 border-b border-[var(--border-subtle)] pb-4">
+      <div>
+        <h2 id="collections-heading" class="font-serif text-2xl font-bold text-[var(--text-primary)]">
+          Explore by Collection
+        </h2>
+        <p class="text-sm text-[var(--text-muted)] mt-1">Five curated branches of remembrance</p>
+      </div>
+      <a href="/tags" class="text-xs font-medium text-[var(--accent-gold)] hover:underline hidden sm:inline-block">
+        Browse by Tag Index →
+      </a>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+      {collectionStats.map((col) => (
+        <a
+          href={col.href}
+          class="group flex flex-col justify-between p-5 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] hover:border-[var(--accent-gold)]/60 transition-all duration-200 shadow-[var(--card-shadow)] hover:-translate-y-1"
+        >
+          <div>
+            <div class="text-2xl mb-3">{col.icon}</div>
+            <h3 class="font-serif font-semibold text-base text-[var(--text-primary)] group-hover:text-[var(--accent-gold)] transition-colors">
+              {col.label}
+            </h3>
+            <p class="text-xs text-[var(--text-muted)] mt-1.5 leading-relaxed">
+              {col.desc}
+            </p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-[var(--border-subtle)]/60 flex items-center justify-between text-xs text-[var(--text-muted)]">
+            <span>{col.count} {col.count === 1 ? 'entry' : 'entries'}</span>
+            <span class="text-[var(--accent-gold)] group-hover:translate-x-1 transition-transform">→</span>
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- Latest Entries Across All Collections -->
+  <section class="my-16" aria-labelledby="latest-entries-heading">
+    <div class="flex items-center justify-between mb-8 border-b border-[var(--border-subtle)] pb-4">
+      <div>
+        <h2 id="latest-entries-heading" class="font-serif text-2xl font-bold text-[var(--text-primary)]">
+          Recent Additions
+        </h2>
+        <p class="text-sm text-[var(--text-muted)] mt-1">Chronological notebook entries</p>
+      </div>
+      <a href="/search" class="text-xs font-medium text-[var(--accent-gold)] hover:underline">
+        Search All ({allEntries.length}) →
+      </a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {latestEntries.map((entry) => (
+        <EntryCard
+          collection={entry.collection}
+          slug={entry.slug}
+          data={entry.data}
+        />
+      ))}
+    </div>
+  </section>
+
+  <!-- About Teaser -->
+  <section class="my-16 p-8 sm:p-12 rounded-3xl bg-[var(--bg-subtle)]/70 border border-[var(--border-subtle)] text-center relative overflow-hidden">
+    <div class="max-w-2xl mx-auto space-y-4">
+      <div class="text-[var(--accent-gold)] text-3xl font-serif">✦</div>
+      <h2 class="font-serif text-2xl sm:text-3xl font-bold text-[var(--text-primary)]">
+        Why Musafir Exists
+      </h2>
+      <p class="text-sm sm:text-base text-[var(--text-secondary)] leading-relaxed">
+        The life of this world is like a journey under the shade of a tree before moving onward. Musafir is a personal digital notebook to anchor verified wisdom, preserve authentic narrations, and provide a quiet reading atmosphere free of algorithmic noise.
+      </p>
+      <div class="pt-2">
+        <a
+          href="/about"
+          class="inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--accent-gold)] hover:text-[var(--accent-gold-hover)] hover:underline"
+        >
+          <span>Read our full sourcing and verification policy</span>
+          <span>→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+</Layout>

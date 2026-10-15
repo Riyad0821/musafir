@@ -1,0 +1,356 @@
+---
+import Layout from '../../components/Layout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import ArabicBlock from '../../components/ArabicBlock.astro';
+import SourceList from '../../components/SourceList.astro';
+import TagList from '../../components/TagList.astro';
+import RelatedEntries from '../../components/RelatedEntries.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const [ayat, hadith, events, sahaba, writings] = await Promise.all([
+    getCollection('ayat', ({ data }) => !data.draft),
+    getCollection('hadith', ({ data }) => !data.draft),
+    getCollection('events', ({ data }) => !data.draft),
+    getCollection('sahaba', ({ data }) => !data.draft),
+    getCollection('writings', ({ data }) => !data.draft),
+  ]);
+
+  const collectionsData = [
+    { name: 'ayat' as const, items: ayat },
+    { name: 'hadith' as const, items: hadith },
+    { name: 'events' as const, items: events },
+    { name: 'sahaba' as const, items: sahaba },
+    { name: 'writings' as const, items: writings },
+  ];
+
+  const paths = [];
+
+  for (const { name, items } of collectionsData) {
+    // Sort by date added descending
+    const sorted = [...items].sort((a, b) => new Date(b.data.dateAdded).getTime() - new Date(a.data.dateAdded).getTime());
+
+    for (let i = 0; i < sorted.length; i++) {
+      const entry = sorted[i];
+      const prevEntry = i > 0 ? sorted[i - 1] : null;
+      const nextEntry = i < sorted.length - 1 ? sorted[i + 1] : null;
+
+      paths.push({
+        params: {
+          collection: name,
+          slug: entry.id,
+        },
+        props: {
+          entry,
+          collection: name,
+          prevEntry: prevEntry ? { id: prevEntry.id, data: prevEntry.data } : null,
+          nextEntry: nextEntry ? { id: nextEntry.id, data: nextEntry.data } : null,
+        },
+      });
+    }
+  }
+
+  return paths;
+}
+
+const { entry, collection, prevEntry, nextEntry } = Astro.props;
+const data = entry.data;
+
+// Render markdown body
+const { Content } = await render(entry);
+
+// Determine titles, descriptions, and labels
+let displayTitle = '';
+let displaySubtitle = '';
+let collectionLabel = '';
+let collectionUrl = `/${collection}`;
+
+if (collection === 'ayat') {
+  displayTitle = `${data.surah} (${data.surahNumber}:${data.ayahFrom}${data.ayahTo ? `-${data.ayahTo}` : ''})`;
+  displaySubtitle = `Translation by ${data.translationSource}`;
+  collectionLabel = 'Quranic Ayat';
+} else if (collection === 'hadith') {
+  displayTitle = `${data.collection} #${data.hadithNumber}`;
+  displaySubtitle = `Narrated by ${data.narrator}`;
+  collectionLabel = 'Prophetic Hadith';
+} else if (collection === 'events') {
+  displayTitle = data.title;
+  displaySubtitle = [data.hijriDate, data.gregorianDate, data.era].filter(Boolean).join(' • ');
+  collectionLabel = 'Islamic Events';
+} else if (collection === 'sahaba') {
+  displayTitle = data.title;
+  displaySubtitle = `Account of ${data.sahabi}${data.relatedEvent ? ` • ${data.relatedEvent}` : ''}`;
+  collectionLabel = 'Lives of the Sahaba';
+} else if (collection === 'writings') {
+  displayTitle = data.title;
+  displaySubtitle = `By ${data.author} (${data.type})`;
+  collectionLabel = 'Writings & Reflections';
+}
+
+const seoTitle = data.seoTitle || displayTitle;
+const seoDesc = data.seoDescription || data.summary || data.translation || displaySubtitle;
+const ogImage = `/og/${collection}/${entry.id}.png`;
+const schemaType = (collection === 'writings' || collection === 'events' || collection === 'sahaba') ? 'article' : 'website';
+
+const formattedDate = data.dateAdded ? new Date(data.dateAdded).toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric'
+}) : '';
+---
+
+<Layout
+  seo={{
+    title: seoTitle,
+    description: seoDesc,
+    image: ogImage,
+    schemaType: schemaType,
+    publishDate: data.dateAdded,
+    breadcrumbs: [
+      { name: collectionLabel, url: collectionUrl },
+      { name: displayTitle, url: `/${collection}/${entry.id}` },
+    ],
+  }}
+>
+  <div class="max-w-3xl mx-auto">
+    <!-- Breadcrumbs -->
+    <Breadcrumbs
+      items={[
+        { name: collectionLabel, url: collectionUrl },
+        { name: displayTitle, url: `/${collection}/${entry.id}` },
+      ]}
+    />
+
+    <!-- Header Block -->
+    <header class="py-6 sm:py-8 border-b border-[var(--border-subtle)] mb-8">
+      <div class="flex items-center gap-3 text-xs mb-3 flex-wrap">
+        <a
+          href={collectionUrl}
+          class="inline-flex items-center px-2.5 py-0.5 rounded-full font-medium bg-[var(--accent-gold-subtle)] text-[var(--accent-gold)] border border-[var(--accent-gold)]/30 hover:underline"
+        >
+          {collectionLabel}
+        </a>
+        {data.featured && (
+          <span class="text-xs text-[var(--accent-gold)] font-medium">★ Featured</span>
+        )}
+        {formattedDate && (
+          <time datetime={data.dateAdded?.toISOString?.()} class="text-[var(--text-muted)]">
+            Added on {formattedDate}
+          </time>
+        )}
+      </div>
+
+      <h1 class="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-[var(--text-primary)] leading-tight">
+        {displayTitle}
+      </h1>
+
+      {displaySubtitle && (
+        <p class="font-serif italic text-base sm:text-xl text-[var(--text-secondary)] mt-2">
+          {displaySubtitle}
+        </p>
+      )}
+    </header>
+
+    <!-- Specific Content Renderers -->
+    {collection === 'ayat' && (
+      <div class="space-y-8 my-8">
+        <!-- Arabic Quranic Text -->
+        <ArabicBlock text={data.arabic} sourceLabel={`Surah ${data.surah} (${data.surahNumber}:${data.ayahFrom})`} size="featured" />
+
+        <!-- English Translation -->
+        <div class="p-6 sm:p-8 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] shadow-[var(--card-shadow)]">
+          <h2 class="text-xs font-semibold uppercase tracking-wider text-[var(--accent-gold)] mb-3">
+            English Translation ({data.translationSource})
+          </h2>
+          <blockquote class="font-serif text-lg sm:text-xl text-[var(--text-primary)] leading-relaxed italic">
+            "{data.translation}"
+          </blockquote>
+          {data.note && (
+            <p class="mt-4 pt-4 border-t border-[var(--border-subtle)] text-xs text-[var(--text-secondary)]">
+              <strong>Footnote:</strong> {data.note}
+            </p>
+          )}
+        </div>
+
+        <!-- Authenticity & Citations -->
+        <SourceList
+          reference={`Surah ${data.surah} [${data.surahNumber}:${data.ayahFrom}${data.ayahTo ? `-${data.ayahTo}` : ''}]`}
+          translationSource={data.translationSource}
+        />
+      </div>
+    )}
+
+    {collection === 'hadith' && (
+      <div class="space-y-8 my-8">
+        <!-- Arabic Hadith Text -->
+        {data.arabic && (
+          <ArabicBlock text={data.arabic} sourceLabel={data.reference} size="large" />
+        )}
+
+        <!-- English Translation -->
+        <div class="p-6 sm:p-8 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] shadow-[var(--card-shadow)]">
+          <h2 class="text-xs font-semibold uppercase tracking-wider text-[var(--accent-gold)] mb-3">
+            Translation
+          </h2>
+          <blockquote class="font-serif text-lg sm:text-xl text-[var(--text-primary)] leading-relaxed italic">
+            "{data.translation}"
+          </blockquote>
+          {data.note && (
+            <p class="mt-4 pt-4 border-t border-[var(--border-subtle)] text-xs text-[var(--text-secondary)]">
+              <strong>Context Note:</strong> {data.note}
+            </p>
+          )}
+        </div>
+
+        <!-- Authenticity & Citations -->
+        <SourceList
+          reference={data.reference}
+          narrator={data.narrator}
+          grading={data.grading}
+          translationSource={data.translationSource}
+        />
+      </div>
+    )}
+
+    {collection === 'events' && (
+      <div class="space-y-8 my-8">
+        <!-- Event Overview Box -->
+        <div class="p-6 sm:p-8 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] shadow-[var(--card-shadow)] space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm border-b border-[var(--border-subtle)] pb-4">
+            {data.hijriDate && (
+              <div>
+                <span class="text-xs text-[var(--text-muted)] block">Hijri Date</span>
+                <span class="font-semibold text-[var(--text-primary)]">{data.hijriDate}</span>
+              </div>
+            )}
+            {data.gregorianDate && (
+              <div>
+                <span class="text-xs text-[var(--text-muted)] block">Gregorian Equivalent</span>
+                <span class="font-semibold text-[var(--text-primary)]">{data.gregorianDate}</span>
+              </div>
+            )}
+            {data.location && (
+              <div>
+                <span class="text-xs text-[var(--text-muted)] block">Location</span>
+                <span class="font-medium text-[var(--text-primary)]">{data.location}</span>
+              </div>
+            )}
+            {data.era && (
+              <div>
+                <span class="text-xs text-[var(--text-muted)] block">Historical Era</span>
+                <span class="font-medium text-[var(--text-primary)]">{data.era}</span>
+              </div>
+            )}
+          </div>
+          <div>
+            <h2 class="text-xs font-semibold uppercase tracking-wider text-[var(--accent-gold)] mb-2">Summary</h2>
+            <p class="text-base text-[var(--text-secondary)] leading-relaxed">
+              {data.summary}
+            </p>
+          </div>
+        </div>
+
+        <!-- Historical Sources -->
+        <SourceList sources={data.sources} />
+      </div>
+    )}
+
+    {collection === 'sahaba' && (
+      <div class="space-y-8 my-8">
+        <!-- Sahaba Overview Box -->
+        <div class="p-6 sm:p-8 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] shadow-[var(--card-shadow)] space-y-3">
+          <div class="text-xs font-semibold uppercase tracking-wider text-[var(--accent-gold)]">
+            Biographical Account
+          </div>
+          <p class="text-base sm:text-lg text-[var(--text-secondary)] leading-relaxed italic">
+            "{data.summary}"
+          </p>
+        </div>
+
+        <!-- Sources -->
+        <SourceList sources={data.sources} />
+      </div>
+    )}
+
+    {collection === 'writings' && (
+      <div class="space-y-8 my-8">
+        {data.summary && (
+          <div class="p-6 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] shadow-[var(--card-shadow)]">
+            <h2 class="text-xs font-semibold uppercase tracking-wider text-[var(--accent-gold)] mb-2">Overview</h2>
+            <p class="text-base text-[var(--text-secondary)] leading-relaxed">
+              {data.summary}
+            </p>
+          </div>
+        )}
+
+        {data.originalSource && (
+          <SourceList reference={data.originalSource} narrator={data.author} />
+        )}
+      </div>
+    )}
+
+    <!-- Markdown Reflection Body (if present) -->
+    <article class="reading-prose my-10 border-t border-[var(--border-subtle)] pt-8">
+      <h2 class="text-xl font-serif font-bold text-[var(--text-primary)] mb-4">
+        Contemplation & Context
+      </h2>
+      <div class="text-[var(--text-secondary)]">
+        <Content />
+      </div>
+    </article>
+
+    <!-- Entry Tags -->
+    {data.tags && data.tags.length > 0 && (
+      <div class="py-6 border-t border-[var(--border-subtle)]">
+        <h3 class="text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)] mb-3">
+          Themes & Topic Tags
+        </h3>
+        <TagList tags={data.tags} size="md" />
+      </div>
+    )}
+
+    <!-- Prev / Next Navigation -->
+    <nav class="my-10 pt-6 border-t border-[var(--border-subtle)] grid grid-cols-1 sm:grid-cols-2 gap-4" aria-label="Adjacent entries">
+      <div>
+        {prevEntry && (
+          <a
+            href={`/${collection}/${prevEntry.id}`}
+            class="group p-4 rounded-xl border border-[var(--border-subtle)] hover:border-[var(--accent-gold)]/60 bg-[var(--bg-surface)] flex flex-col justify-between transition-colors h-full"
+          >
+            <span class="text-xs text-[var(--text-muted)] flex items-center gap-1 group-hover:text-[var(--accent-gold)]">
+              ← Previous in {collectionLabel}
+            </span>
+            <span class="font-serif font-semibold text-sm sm:text-base text-[var(--text-primary)] mt-1 line-clamp-1">
+              {prevEntry.data.title || prevEntry.data.surah || prevEntry.data.collection}
+            </span>
+          </a>
+        )}
+      </div>
+
+      <div>
+        {nextEntry && (
+          <a
+            href={`/${collection}/${nextEntry.id}`}
+            class="group p-4 rounded-xl border border-[var(--border-subtle)] hover:border-[var(--accent-gold)]/60 bg-[var(--bg-surface)] flex flex-col justify-between transition-colors text-right sm:ml-auto h-full"
+          >
+            <span class="text-xs text-[var(--text-muted)] flex items-center justify-end gap-1 group-hover:text-[var(--accent-gold)]">
+              Next in {collectionLabel} →
+            </span>
+            <span class="font-serif font-semibold text-sm sm:text-base text-[var(--text-primary)] mt-1 line-clamp-1">
+              {nextEntry.data.title || nextEntry.data.surah || nextEntry.data.collection}
+            </span>
+          </a>
+        )}
+      </div>
+    </nav>
+
+    <!-- Related Entries (by shared tags) -->
+    {data.tags && data.tags.length > 0 && (
+      <RelatedEntries
+        currentCollection={collection}
+        currentSlug={entry.id}
+        tags={data.tags}
+      />
+    )}
+  </div>
+</Layout>

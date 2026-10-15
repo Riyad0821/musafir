@@ -1,0 +1,50 @@
+---
+export interface Props {
+  showTagline?: boolean;
+  class?: string;
+}
+
+const { showTagline = false, class: className = '' } = Astro.props;
+---
+
+<a href="/" class={`inline-flex items-center gap-3 group focus:outline-none focus:ring-2 focus:ring-[var(--accent-gold)] rounded-lg px-1 py-0.5 ${className}`}>
+  <!-- Elegant Traveler Emblem: Crescent & Guiding Star / Compass -->
+  <svg
+    class="w-9 h-9 text-[var(--accent-gold)] group-hover:scale-105 transition-transform duration-300 flex-shrink-0"
+    viewBox="0 0 36 36"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden="true"
+  >
+    <!-- Subtle outer ring -->
+    <circle cx="18" cy="18" r="16.5" stroke="currentColor" stroke-opacity="0.25" stroke-width="1.2" stroke-dasharray="2 2" />
+    
+    <!-- Crescent Motif -->
+    <path
+      d="M20.5 8.5C14.7 8.5 10 13.2 10 19C10 24.8 14.7 29.5 20.5 29.5C23.2 29.5 25.6 28.5 27.5 26.8C20 27.2 14.2 21 15 13.5C16.4 10.4 18.3 9.1 20.5 8.5Z"
+      fill="currentColor"
+    />
+    
+    <!-- Guiding Star / Compass Needle -->
+    <path
+      d="M24 11L25.2 14.8L29 16L25.2 17.2L24 21L22.8 17.2L19 16L22.8 14.8L24 11Z"
+      fill="currentColor"
+    />
+  </svg>
+
+  <div class="flex flex-col">
+    <div class="flex items-baseline gap-2">
+      <span class="font-serif font-bold text-xl md:text-2xl tracking-tight text-[var(--text-primary)] group-hover:text-[var(--accent-gold)] transition-colors">
+        Musafir
+      </span>
+      <span class="arabic-text text-sm font-normal text-[var(--text-muted)] opacity-80" dir="rtl" lang="ar">
+        مُسَافِر
+      </span>
+    </div>
+    {showTagline && (
+      <span class="text-xs text-[var(--text-muted)] tracking-wide font-sans hidden sm:block">
+        Notebook of reflection
+      </span>
+    )}
+  </div>
+</a>

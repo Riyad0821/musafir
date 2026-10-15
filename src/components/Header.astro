@@ -1,0 +1,171 @@
+---
+import Logo from './Logo.astro';
+import ThemeToggle from './ThemeToggle.astro';
+import { SITE_CONFIG } from '../config';
+
+const pathname = new URL(Astro.request.url).pathname;
+
+const navLinks = [
+  { href: '/ayat', label: 'Ayat' },
+  { href: '/hadith', label: 'Hadith' },
+  { href: '/events', label: 'Events' },
+  { href: '/sahaba', label: 'Sahaba' },
+  { href: '/writings', label: 'Writings' },
+  { href: '/tags', label: 'Tags' },
+  { href: '/about', label: 'About' },
+];
+
+const isLinkActive = (href: string) => {
+  if (href === '/' && pathname === '/') return true;
+  if (href !== '/' && pathname.startsWith(href)) return true;
+  return false;
+};
+---
+
+<header class="sticky top-0 z-40 w-full backdrop-blur-md bg-[var(--bg-base)]/90 border-b border-[var(--border-subtle)] transition-colors">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between gap-4">
+    <!-- Logo -->
+    <Logo showTagline={false} />
+
+    <!-- Desktop Nav Links -->
+    <nav class="hidden lg:flex items-center gap-1 font-medium text-sm" aria-label="Main navigation">
+      {navLinks.map((link) => {
+        const active = isLinkActive(link.href);
+        return (
+          <a
+            href={link.href}
+            class={`px-3 py-1.5 rounded-md transition-colors ${
+              active
+                ? 'text-[var(--accent-gold)] font-semibold bg-[var(--accent-gold-subtle)]/70'
+                : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-subtle)]'
+            }`}
+            aria-current={active ? 'page' : undefined}
+          >
+            {link.label}
+          </a>
+        );
+      })}
+    </nav>
+
+    <!-- Header Actions: Search, Theme Toggle, Mobile Hamburger -->
+    <div class="flex items-center gap-2">
+      <!-- Search Link Button -->
+      <a
+        href="/search"
+        class={`p-2 rounded-lg text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--accent-gold)] ${
+          pathname === '/search' ? 'text-[var(--accent-gold)] bg-[var(--accent-gold-subtle)]' : ''
+        }`}
+        aria-label="Search all collections"
+        title="Search entries (Pagefind)"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+      </a>
+
+      <!-- Theme Toggle -->
+      <ThemeToggle />
+
+      <!-- Mobile Menu Button -->
+      <button
+        id="mobile-menu-toggle"
+        type="button"
+        class="lg:hidden p-2 rounded-lg text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-gold)]"
+        aria-label="Toggle navigation menu"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+      >
+        <svg id="hamburger-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+        <svg id="close-icon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Drawer / Dropdown -->
+  <div
+    id="mobile-menu"
+    class="lg:hidden hidden border-b border-[var(--border-subtle)] bg-[var(--bg-surface)] px-4 pt-3 pb-6 transition-all"
+  >
+    <nav class="flex flex-col gap-1" aria-label="Mobile navigation">
+      <a
+        href="/"
+        class={`px-3 py-2.5 rounded-lg text-base font-medium transition-colors ${
+          pathname === '/'
+            ? 'text-[var(--accent-gold)] bg-[var(--accent-gold-subtle)] font-semibold'
+            : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-subtle)]'
+        }`}
+      >
+        Home
+      </a>
+      {navLinks.map((link) => {
+        const active = isLinkActive(link.href);
+        return (
+          <a
+            href={link.href}
+            class={`px-3 py-2.5 rounded-lg text-base font-medium transition-colors ${
+              active
+                ? 'text-[var(--accent-gold)] bg-[var(--accent-gold-subtle)] font-semibold'
+                : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-subtle)]'
+            }`}
+            aria-current={active ? 'page' : undefined}
+          >
+            {link.label}
+          </a>
+        );
+      })}
+      <a
+        href="/search"
+        class={`px-3 py-2.5 rounded-lg text-base font-medium flex items-center gap-2 transition-colors ${
+          pathname === '/search'
+            ? 'text-[var(--accent-gold)] bg-[var(--accent-gold-subtle)] font-semibold'
+            : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-subtle)]'
+        }`}
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+        Search Musafir
+      </a>
+    </nav>
+  </div>
+</header>
+
+<script is:inline>
+  function setupMobileMenu() {
+    const btn = document.getElementById('mobile-menu-toggle');
+    const menu = document.getElementById('mobile-menu');
+    const hamburgerIcon = document.getElementById('hamburger-icon');
+    const closeIcon = document.getElementById('close-icon');
+
+    if (!btn || !menu) return;
+
+    btn.addEventListener('click', () => {
+      const isExpanded = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!isExpanded));
+      menu.classList.toggle('hidden');
+      if (hamburgerIcon && closeIcon) {
+        hamburgerIcon.classList.toggle('hidden');
+        closeIcon.classList.toggle('hidden');
+      }
+    });
+
+    // Close when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!btn.contains(e.target) && !menu.contains(e.target) && !menu.classList.contains('hidden')) {
+        menu.classList.add('hidden');
+        btn.setAttribute('aria-expanded', 'false');
+        if (hamburgerIcon && closeIcon) {
+          hamburgerIcon.classList.remove('hidden');
+          closeIcon.classList.add('hidden');
+        }
+      }
+    });
+  }
+
+  setupMobileMenu();
+  document.addEventListener('astro:after-swap', setupMobileMenu);
+</script>

@@ -1,0 +1,78 @@
+---
+import Layout from '../../components/Layout.astro';
+import EntryCard from '../../components/EntryCard.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import Pagination from '../../components/Pagination.astro';
+import { getCollection } from 'astro:content';
+import tagsData from '../../data/tags.json';
+
+const allEvents = await getCollection('events', ({ data }) => !data.draft);
+allEvents.sort((a, b) => new Date(b.data.dateAdded).getTime() - new Date(a.data.dateAdded).getTime());
+
+const uniqueTags = Array.from(new Set(allEvents.flatMap((item) => item.data.tags || [])));
+const tagRecord = tagsData as Record<string, { name: string; description: string }>;
+
+const pageSize = 12;
+const totalPages = Math.ceil(allEvents.length / pageSize) || 1;
+const currentPage = 1;
+const paginatedEntries = allEvents.slice(0, pageSize);
+---
+
+<Layout
+  seo={{
+    title: 'Islamic Events — History & Milestones',
+    description: 'Epochal events in Islamic history, hijri dates, eras, and foundational lessons from the early community.',
+    breadcrumbs: [
+      { name: 'Islamic Events', url: '/events' }
+    ],
+  }}
+>
+  <Breadcrumbs items={[{ name: 'Events', url: '/events' }]} />
+
+  <header class="py-8 md:py-12 border-b border-[var(--border-subtle)] mb-8">
+    <div class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[var(--accent-gold)] mb-3">
+      <span>Collection</span>
+      <span>•</span>
+      <span>{allEvents.length} {allEvents.length === 1 ? 'Entry' : 'Entries'}</span>
+    </div>
+
+    <h1 class="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-[var(--text-primary)]">
+      Islamic Events & Milestones
+    </h1>
+
+    <p class="mt-3 text-base sm:text-lg text-[var(--text-secondary)] max-w-2xl leading-relaxed">
+      Chronicles of key historic events from the dawn of Islam, highlighting hijri chronology, strategic turns, and enduring spiritual lessons.
+    </p>
+
+    {uniqueTags.length > 0 && (
+      <div class="mt-6 flex flex-wrap items-center gap-2">
+        <span class="text-xs text-[var(--text-muted)] font-medium mr-1">Filter by tag:</span>
+        {uniqueTags.map((tag) => (
+          <a
+            href={`/tags/${tag}`}
+            class="text-xs px-3 py-1 rounded-full bg-[var(--bg-subtle)] text-[var(--text-secondary)] hover:bg-[var(--accent-gold-subtle)] hover:text-[var(--accent-gold)] border border-[var(--border-subtle)] transition-colors"
+          >
+            #{tagRecord[tag]?.name || tag}
+          </a>
+        ))}
+      </div>
+    )}
+  </header>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {paginatedEntries.map((entry) => (
+      <EntryCard
+        collection="events"
+        slug={entry.id}
+        data={entry.data}
+      />
+    ))}
+  </div>
+
+  <Pagination
+    currentPage={currentPage}
+    lastPage={totalPages}
+    nextUrl={totalPages > 1 ? '/events/page/2' : undefined}
+    baseUrl="/events"
+  />
+</Layout>

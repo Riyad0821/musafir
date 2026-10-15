@@ -1,0 +1,72 @@
+---
+export interface Props {
+  currentPage: number;
+  lastPage: number;
+  prevUrl?: string;
+  nextUrl?: string;
+  baseUrl: string;
+}
+
+const { currentPage, lastPage, prevUrl, nextUrl, baseUrl } = Astro.props;
+
+if (lastPage <= 1) {
+  // No pagination needed if only 1 page
+}
+---
+
+{lastPage > 1 && (
+  <nav aria-label="Pagination Navigation" class="flex items-center justify-between border-t border-[var(--border-subtle)] pt-6 mt-12">
+    <!-- Prev Link -->
+    <div class="flex-1 flex justify-start">
+      {prevUrl ? (
+        <a
+          href={prevUrl}
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-[var(--border-subtle)] text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--accent-gold)] hover:bg-[var(--bg-subtle)] transition-colors"
+          rel="prev"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+          </svg>
+          Previous
+        </a>
+      ) : (
+        <span class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-transparent text-sm font-medium text-[var(--text-muted)] opacity-40 cursor-not-allowed">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+          </svg>
+          Previous
+        </span>
+      )}
+    </div>
+
+    <!-- Page Indicator -->
+    <div class="hidden sm:flex items-center text-sm text-[var(--text-muted)]">
+      <span>
+        Page <span class="font-semibold text-[var(--text-primary)]">{currentPage}</span> of <span class="font-semibold text-[var(--text-primary)]">{lastPage}</span>
+      </span>
+    </div>
+
+    <!-- Next Link -->
+    <div class="flex-1 flex justify-end">
+      {nextUrl ? (
+        <a
+          href={nextUrl}
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-[var(--border-subtle)] text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--accent-gold)] hover:bg-[var(--bg-subtle)] transition-colors"
+          rel="next"
+        >
+          Next
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </a>
+      ) : (
+        <span class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-transparent text-sm font-medium text-[var(--text-muted)] opacity-40 cursor-not-allowed">
+          Next
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </span>
+      )}
+    </div>
+  </nav>
+)}

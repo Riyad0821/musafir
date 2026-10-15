@@ -1,0 +1,96 @@
+---
+import Layout from '../../components/Layout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { getCollection } from 'astro:content';
+import tagsData from '../../data/tags.json';
+
+const [ayat, hadith, events, sahaba, writings] = await Promise.all([
+  getCollection('ayat', ({ data }) => !data.draft),
+  getCollection('hadith', ({ data }) => !data.draft),
+  getCollection('events', ({ data }) => !data.draft),
+  getCollection('sahaba', ({ data }) => !data.draft),
+  getCollection('writings', ({ data }) => !data.draft),
+]);
+
+const tagCounts: Record<string, number> = {};
+
+const countTags = (items: any[]) => {
+  for (const item of items) {
+    for (const tag of item.data.tags || []) {
+      tagCounts[tag] = (tagCounts[tag] || 0) + 1;
+    }
+  }
+};
+
+countTags(ayat);
+countTags(hadith);
+countTags(events);
+countTags(sahaba);
+countTags(writings);
+
+const tagRecord = tagsData as Record<string, { name: string; description: string }>;
+
+// Combine tags found in content and tags defined in data file
+const allTagKeys = Array.from(new Set([...Object.keys(tagRecord), ...Object.keys(tagCounts)]));
+
+allTagKeys.sort((a, b) => (tagCounts[b] || 0) - (tagCounts[a] || 0));
+---
+
+<Layout
+  seo={{
+    title: 'Tag Directory — Themes & Concepts',
+    description: 'Explore the Musafir collection by subject: Tawhid, Sabr, Shukr, Quranic themes, and historical moments.',
+    breadcrumbs: [{ name: 'Tags', url: '/tags' }],
+  }}
+>
+  <Breadcrumbs items={[{ name: 'Tags', url: '/tags' }]} />
+
+  <header class="py-8 md:py-12 border-b border-[var(--border-subtle)] mb-10">
+    <div class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[var(--accent-gold)] mb-3">
+      <span>Index</span>
+      <span>•</span>
+      <span>{allTagKeys.length} Themes</span>
+    </div>
+
+    <h1 class="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-[var(--text-primary)]">
+      Themes & Spiritual Markers
+    </h1>
+
+    <p class="mt-3 text-base sm:text-lg text-[var(--text-secondary)] max-w-2xl leading-relaxed">
+      Navigate across all five branches through interconnected themes. Each tag brings together divine revelation, prophetic wisdom, and historical footsteps.
+    </p>
+  </header>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {allTagKeys.map((tag) => {
+      const info = tagRecord[tag];
+      const count = tagCounts[tag] || 0;
+      return (
+        <a
+          href={`/tags/${tag}`}
+          class="group flex flex-col justify-between p-6 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] hover:border-[var(--accent-gold)]/60 transition-all duration-200 shadow-[var(--card-shadow)] hover:-translate-y-1"
+        >
+          <div>
+            <div class="flex items-start justify-between gap-2 mb-2">
+              <h2 class="font-serif font-bold text-lg text-[var(--text-primary)] group-hover:text-[var(--accent-gold)] transition-colors">
+                #{info?.name || tag.replace(/-/g, ' ')}
+              </h2>
+              <span class="text-xs px-2.5 py-0.5 rounded-full font-semibold bg-[var(--bg-subtle)] text-[var(--text-muted)] group-hover:bg-[var(--accent-gold-subtle)] group-hover:text-[var(--accent-gold)] transition-colors">
+                {count}
+              </span>
+            </div>
+
+            <p class="text-xs sm:text-sm text-[var(--text-secondary)] leading-relaxed line-clamp-3 mt-2">
+              {info?.description || 'Curated reflections and historical accounts corresponding to this topic.'}
+            </p>
+          </div>
+
+          <div class="mt-4 pt-3 border-t border-[var(--border-subtle)]/60 flex items-center justify-between text-xs text-[var(--accent-gold)] font-medium">
+            <span>Explore theme hub</span>
+            <span class="group-hover:translate-x-1 transition-transform">→</span>
+          </div>
+        </a>
+      );
+    })}
+  </div>
+</Layout>
