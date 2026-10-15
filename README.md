@@ -26,6 +26,7 @@ Musafir is an ultra-fast, calm, reading-focused personal content-collection webs
   3. `events` — Milestones in Islamic history with Hijri dates, eras, and chronicles.
   4. `sahaba` — Biographical moments and steadfast faith of the Companions.
   5. `writings` — Personal contemplations, classical wisdom quotes, articles, and poems.
+- **Multilingual Support (i18n)**: Full support for English (US `en-US`), English (UK `en-GB`), and Bangla (BN `bn`) with an accessible language switcher, dedicated subpaths (`/en-gb/...`, `/bn/...`), `hreflang` alternate links, and Hind Siliguri Bengali typography.
 - **RTL Arabic Typography**: Amiri & Noto Naskh Arabic loaded with proper tashkeel spacing, 1.5x font scale, and generous line height (`leading-[2.1]`).
 - **Zero-Latency Search**: Client-side full-text search powered by Pagefind (no servers, no external APIs).
 - **Dynamic Open Graph Images**: Build-time branded PNG OG cards generated automatically for every entry using Satori and Resvg.
