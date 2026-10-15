@@ -1,5 +1,6 @@
 ---
 import TagList from './TagList.astro';
+import { getLangFromUrl, getLocalizedPath, useTranslations } from '../i18n/utils';
 
 export interface Props {
   collection: 'ayat' | 'hadith' | 'events' | 'sahaba' | 'writings';
@@ -9,6 +10,8 @@ export interface Props {
 }
 
 const { collection, slug, data, featured = false } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 
 // Compute title, subtitle, and URL
 let title = '';
@@ -19,44 +22,46 @@ let referenceOrSource = '';
 
 if (collection === 'ayat') {
   title = `${data.surah} (${data.surahNumber}:${data.ayahFrom}${data.ayahTo ? `-${data.ayahTo}` : ''})`;
-  subtitle = `Translation: ${data.translationSource}`;
+  const transSrc = (lang === 'bn' && data.translationSourceBn) ? data.translationSourceBn : data.translationSource;
+  subtitle = `${lang === 'bn' ? 'অনুবাদ সূত্র' : 'Translation'}: ${transSrc}`;
   arabicPreview = data.arabic;
-  excerpt = data.translation;
-  referenceOrSource = `Surah ${data.surahNumber}, Ayah ${data.ayahFrom}`;
+  excerpt = (lang === 'bn' && data.translationBn) ? data.translationBn : data.translation;
+  referenceOrSource = `${lang === 'bn' ? 'সূরা' : 'Surah'} ${data.surahNumber}, ${lang === 'bn' ? 'আয়াত' : 'Ayah'} ${data.ayahFrom}`;
 } else if (collection === 'hadith') {
   title = `${data.collection} #${data.hadithNumber}`;
-  subtitle = `Narrated by ${data.narrator}`;
+  subtitle = `${lang === 'bn' ? 'বর্ণনাকারী' : 'Narrated by'} ${data.narrator}`;
   arabicPreview = data.arabic;
-  excerpt = data.translation;
+  excerpt = (lang === 'bn' && data.translationBn) ? data.translationBn : data.translation;
   referenceOrSource = data.reference;
 } else if (collection === 'events') {
-  title = data.title;
+  title = (lang === 'bn' && data.titleBn) ? data.titleBn : data.title;
   subtitle = [data.hijriDate, data.gregorianDate, data.era].filter(Boolean).join(' • ');
-  excerpt = data.summary;
+  excerpt = (lang === 'bn' && data.summaryBn) ? data.summaryBn : data.summary;
   referenceOrSource = data.location || (data.sources && data.sources[0]) || '';
 } else if (collection === 'sahaba') {
-  title = data.title;
-  subtitle = `Sahabi: ${data.sahabi}${data.relatedEvent ? ` • ${data.relatedEvent}` : ''}`;
-  excerpt = data.summary;
+  title = (lang === 'bn' && data.titleBn) ? data.titleBn : data.title;
+  subtitle = `${lang === 'bn' ? 'সাহাবি' : 'Sahabi'}: ${data.sahabi}${data.relatedEvent ? ` • ${data.relatedEvent}` : ''}`;
+  excerpt = (lang === 'bn' && data.summaryBn) ? data.summaryBn : data.summary;
   referenceOrSource = (data.sources && data.sources[0]) || '';
 } else if (collection === 'writings') {
-  title = data.title;
-  subtitle = `By ${data.author}${data.type ? ` (${data.type})` : ''}`;
-  excerpt = data.summary || '';
+  title = (lang === 'bn' && data.titleBn) ? data.titleBn : data.title;
+  subtitle = `${lang === 'bn' ? 'লেখক' : 'By'} ${data.author}${data.type ? ` (${data.type})` : ''}`;
+  excerpt = (lang === 'bn' && data.summaryBn) ? data.summaryBn : (data.summary || '');
   referenceOrSource = data.originalSource || '';
 }
 
-const collectionLabels: Record<string, { label: string; badgeClass: string }> = {
-  ayat: { label: 'Ayah', badgeClass: 'bg-emerald-50 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800' },
-  hadith: { label: 'Hadith', badgeClass: 'bg-amber-50 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 border-amber-200 dark:border-amber-800' },
-  events: { label: 'Event', badgeClass: 'bg-sky-50 text-sky-800 dark:bg-sky-950/60 dark:text-sky-300 border-sky-200 dark:border-sky-800' },
-  sahaba: { label: 'Sahaba', badgeClass: 'bg-indigo-50 text-indigo-800 dark:bg-indigo-950/60 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800' },
-  writings: { label: 'Writing', badgeClass: 'bg-rose-50 text-rose-800 dark:bg-rose-950/60 dark:text-rose-300 border-rose-200 dark:border-rose-800' },
+const collectionLabels: Record<string, { en: string; bn: string; badgeClass: string }> = {
+  ayat: { en: 'Ayah', bn: 'আয়াত', badgeClass: 'bg-emerald-50 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800' },
+  hadith: { en: 'Hadith', bn: 'হাদিস', badgeClass: 'bg-amber-50 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 border-amber-200 dark:border-amber-800' },
+  events: { en: 'Event', bn: 'ঘটনা', badgeClass: 'bg-sky-50 text-sky-800 dark:bg-sky-950/60 dark:text-sky-300 border-sky-200 dark:border-sky-800' },
+  sahaba: { en: 'Sahaba', bn: 'সাহাবা', badgeClass: 'bg-indigo-50 text-indigo-800 dark:bg-indigo-950/60 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800' },
+  writings: { en: 'Writing', bn: 'লেখা', badgeClass: 'bg-rose-50 text-rose-800 dark:bg-rose-950/60 dark:text-rose-300 border-rose-200 dark:border-rose-800' },
 };
 
-const badge = collectionLabels[collection] || { label: collection, badgeClass: 'bg-stone-100 text-stone-800' };
-const url = `/${collection}/${slug}`;
-const formattedDate = data.dateAdded ? new Date(data.dateAdded).toLocaleDateString('en-US', {
+const badgeInfo = collectionLabels[collection] || { en: collection, bn: collection, badgeClass: 'bg-stone-100 text-stone-800' };
+const badgeLabel = lang === 'bn' ? badgeInfo.bn : badgeInfo.en;
+const url = getLocalizedPath(`/${collection}/${slug}`, lang);
+const formattedDate = data.dateAdded ? new Date(data.dateAdded).toLocaleDateString(lang === 'bn' ? 'bn-BD' : lang === 'en-gb' ? 'en-GB' : 'en-US', {
   year: 'numeric',
   month: 'short',
   day: 'numeric'
@@ -70,12 +75,12 @@ const formattedDate = data.dateAdded ? new Date(data.dateAdded).toLocaleDateStri
     <!-- Top Metadata Bar -->
     <div class="flex items-center justify-between gap-2 mb-3 text-xs">
       <div class="flex items-center gap-2 flex-wrap">
-        <span class={`inline-flex items-center px-2 py-0.5 rounded-md font-medium text-[11px] border ${badge.badgeClass}`}>
-          {badge.label}
+        <span class={`inline-flex items-center px-2 py-0.5 rounded-md font-medium text-[11px] border ${badgeInfo.badgeClass}`}>
+          {badgeLabel}
         </span>
         {data.featured && (
           <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-medium bg-[var(--accent-gold-subtle)] text-[var(--accent-gold)] border border-[var(--accent-gold)]/30">
-            ★ Featured
+            {t('featured.badge')}
           </span>
         )}
       </div>

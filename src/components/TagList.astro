@@ -1,5 +1,6 @@
 ---
 import tagsData from '../data/tags.json';
+import { getLangFromUrl, getLocalizedPath } from '../i18n/utils';
 
 export interface Props {
   tags: string[];
@@ -8,8 +9,9 @@ export interface Props {
 }
 
 const { tags = [], class: className = '', size = 'sm' } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
 
-const tagRecord = tagsData as Record<string, { name: string; description: string }>;
+const tagRecord = tagsData as Record<string, { name: string; nameBn?: string; description: string; descriptionBn?: string }>;
 
 const sizeClasses = {
   sm: 'text-xs px-2.5 py-1',
@@ -20,10 +22,12 @@ const sizeClasses = {
 {tags && tags.length > 0 && (
   <div class={`flex flex-wrap items-center gap-1.5 ${className}`} aria-label="Tags">
     {tags.map((tag) => {
-      const displayName = tagRecord[tag]?.name || tag.replace(/-/g, ' ');
+      const item = tagRecord[tag];
+      const displayName = lang === 'bn' ? (item?.nameBn || item?.name || tag) : (item?.name || tag.replace(/-/g, ' '));
+      const targetUrl = getLocalizedPath(`/tags/${tag}`, lang);
       return (
         <a
-          href={`/tags/${tag}`}
+          href={targetUrl}
           class={`inline-flex items-center gap-1 rounded-full font-medium transition-colors bg-[var(--bg-subtle)] text-[var(--text-secondary)] hover:bg-[var(--accent-gold-subtle)] hover:text-[var(--accent-gold)] border border-[var(--border-subtle)]/70 ${sizeClasses}`}
         >
           <span class="text-[var(--accent-gold)] opacity-70">#</span>

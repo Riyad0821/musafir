@@ -1,0 +1,93 @@
+---
+import { LOCALES, type SupportedLocale } from '../i18n/ui';
+import { getLangFromUrl, getLocalizedPath } from '../i18n/utils';
+
+export interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+const currentLang = getLangFromUrl(Astro.url);
+const currentPath = Astro.url.pathname;
+const localeList = Object.entries(LOCALES) as [SupportedLocale, typeof LOCALES[SupportedLocale]][];
+---
+
+<div class={`relative inline-block text-left ${className}`} id="language-picker-container">
+  <!-- Trigger Button -->
+  <button
+    id="lang-picker-btn"
+    type="button"
+    class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-xs font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--accent-gold)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--accent-gold)]"
+    aria-expanded="false"
+    aria-haspopup="true"
+    aria-label="Select language"
+  >
+    <span class="text-sm">{LOCALES[currentLang].flag}</span>
+    <span class="hidden sm:inline font-sans">{LOCALES[currentLang].label}</span>
+    <span class="sm:hidden uppercase">{currentLang === 'en' ? 'US' : currentLang === 'en-gb' ? 'UK' : 'বাং'}</span>
+    <svg class="w-3.5 h-3.5 text-[var(--text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+    </svg>
+  </button>
+
+  <!-- Dropdown Menu -->
+  <div
+    id="lang-picker-dropdown"
+    class="hidden absolute right-0 mt-1.5 w-40 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] shadow-lg py-1 z-50 text-xs font-medium focus:outline-none transition-all"
+    role="menu"
+    aria-orientation="vertical"
+    aria-labelledby="lang-picker-btn"
+  >
+    {localeList.map(([locKey, locData]) => {
+      const targetUrl = getLocalizedPath(currentPath, locKey);
+      const isSelected = locKey === currentLang;
+      return (
+        <a
+          href={targetUrl}
+          class={`flex items-center justify-between px-3.5 py-2 hover:bg-[var(--bg-subtle)] transition-colors ${
+            isSelected ? 'text-[var(--accent-gold)] bg-[var(--accent-gold-subtle)]/50 font-semibold' : 'text-[var(--text-secondary)]'
+          }`}
+          role="menuitem"
+          hreflang={locData.htmlLang}
+        >
+          <div class="flex items-center gap-2">
+            <span class="text-sm">{locData.flag}</span>
+            <span>{locData.label}</span>
+          </div>
+          {isSelected && (
+            <svg class="w-3.5 h-3.5 text-[var(--accent-gold)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
+            </svg>
+          )}
+        </a>
+      );
+    })}
+  </div>
+</div>
+
+<script is:inline>
+  function setupLangPicker() {
+    const btn = document.getElementById('lang-picker-btn');
+    const dropdown = document.getElementById('lang-picker-dropdown');
+    const container = document.getElementById('language-picker-container');
+
+    if (!btn || !dropdown) return;
+
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = !dropdown.classList.contains('hidden');
+      dropdown.classList.toggle('hidden');
+      btn.setAttribute('aria-expanded', String(!isOpen));
+    });
+
+    document.addEventListener('click', (e) => {
+      if (container && !container.contains(e.target)) {
+        dropdown.classList.add('hidden');
+        btn.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
+
+  setupLangPicker();
+  document.addEventListener('astro:after-swap', setupLangPicker);
+</script>

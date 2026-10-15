@@ -5,12 +5,16 @@ import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import Pagination from '../../components/Pagination.astro';
 import { getCollection } from 'astro:content';
 import tagsData from '../../data/tags.json';
+import { getLangFromUrl, useTranslations, getLocalizedPath } from '../../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 
 const allSahaba = await getCollection('sahaba', ({ data }) => !data.draft);
 allSahaba.sort((a, b) => new Date(b.data.dateAdded).getTime() - new Date(a.data.dateAdded).getTime());
 
 const uniqueTags = Array.from(new Set(allSahaba.flatMap((item) => item.data.tags || [])));
-const tagRecord = tagsData as Record<string, { name: string; description: string }>;
+const tagRecord = tagsData as Record<string, { name: string; nameBn?: string; description: string }>;
 
 const pageSize = 12;
 const totalPages = Math.ceil(allSahaba.length / pageSize) || 1;
@@ -20,39 +24,39 @@ const paginatedEntries = allSahaba.slice(0, pageSize);
 
 <Layout
   seo={{
-    title: 'Lives of the Sahaba — Companions of the Prophet',
-    description: 'Accounts, character studies, and inspiring moments from the lives of the Companions of the Prophet ﷺ.',
+    title: `${t('collections.sahaba.label')} — ${t('site.title')}`,
+    description: t('collections.sahaba.desc'),
     breadcrumbs: [
-      { name: 'Lives of the Sahaba', url: '/sahaba' }
+      { name: t('collections.sahaba.label'), url: getLocalizedPath('/sahaba', lang) }
     ],
   }}
 >
-  <Breadcrumbs items={[{ name: 'Sahaba', url: '/sahaba' }]} />
+  <Breadcrumbs items={[{ name: t('collections.sahaba.label'), url: getLocalizedPath('/sahaba', lang) }]} />
 
   <header class="py-8 md:py-12 border-b border-[var(--border-subtle)] mb-8">
     <div class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[var(--accent-gold)] mb-3">
-      <span>Collection</span>
+      <span>{t('collections.title')}</span>
       <span>•</span>
-      <span>{allSahaba.length} {allSahaba.length === 1 ? 'Entry' : 'Entries'}</span>
+      <span>{allSahaba.length} {allSahaba.length === 1 ? t('card.entry') : t('card.entries')}</span>
     </div>
 
     <h1 class="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-[var(--text-primary)]">
-      Lives of the Sahaba
+      {t('collections.sahaba.label')}
     </h1>
 
     <p class="mt-3 text-base sm:text-lg text-[var(--text-secondary)] max-w-2xl leading-relaxed">
-      Luminous portraits of the first generation. Their steadfast faith, immense sacrifice, humility, and unwavering companionship remain guiding stars for every sincere traveler.
+      {t('collections.sahaba.desc')}
     </p>
 
     {uniqueTags.length > 0 && (
       <div class="mt-6 flex flex-wrap items-center gap-2">
-        <span class="text-xs text-[var(--text-muted)] font-medium mr-1">Filter by tag:</span>
+        <span class="text-xs text-[var(--text-muted)] font-medium mr-1">{t('filter.byTag')}</span>
         {uniqueTags.map((tag) => (
           <a
-            href={`/tags/${tag}`}
+            href={getLocalizedPath(`/tags/${tag}`, lang)}
             class="text-xs px-3 py-1 rounded-full bg-[var(--bg-subtle)] text-[var(--text-secondary)] hover:bg-[var(--accent-gold-subtle)] hover:text-[var(--accent-gold)] border border-[var(--border-subtle)] transition-colors"
           >
-            #{tagRecord[tag]?.name || tag}
+            #{lang === 'bn' ? (tagRecord[tag]?.nameBn || tagRecord[tag]?.name || tag) : (tagRecord[tag]?.name || tag)}
           </a>
         ))}
       </div>
@@ -72,7 +76,7 @@ const paginatedEntries = allSahaba.slice(0, pageSize);
   <Pagination
     currentPage={currentPage}
     lastPage={totalPages}
-    nextUrl={totalPages > 1 ? '/sahaba/page/2' : undefined}
-    baseUrl="/sahaba"
+    nextUrl={totalPages > 1 ? getLocalizedPath('/sahaba/page/2', lang) : undefined}
+    baseUrl={getLocalizedPath('/sahaba', lang)}
   />
 </Layout>

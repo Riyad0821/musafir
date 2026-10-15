@@ -1,0 +1,93 @@
+---
+import Layout from '../../../components/Layout.astro';
+import EntryCard from '../../../components/EntryCard.astro';
+import Breadcrumbs from '../../../components/Breadcrumbs.astro';
+import Pagination from '../../../components/Pagination.astro';
+import { getCollection } from 'astro:content';
+import tagsData from '../../../data/tags.json';
+import { useTranslations, getLocalizedPath } from '../../../i18n/utils';
+import type { SupportedLocale } from '../../../i18n/ui';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en-gb' } },
+    { params: { lang: 'bn' } },
+  ];
+}
+
+const lang = Astro.params.lang as SupportedLocale;
+const t = useTranslations(lang);
+
+const allAyat = await getCollection('ayat', ({ data }) => !data.draft);
+allAyat.sort((a, b) => new Date(b.data.dateAdded).getTime() - new Date(a.data.dateAdded).getTime());
+
+const uniqueTags = Array.from(new Set(allAyat.flatMap((item) => item.data.tags || [])));
+const tagRecord = tagsData as Record<string, { name: string; nameBn?: string }>;
+
+const pageSize = 12;
+const totalPages = Math.ceil(allAyat.length / pageSize) || 1;
+const currentPage = 1;
+const paginatedEntries = allAyat.slice(0, pageSize);
+---
+
+<Layout
+  seo={{
+    title: `${t('collections.ayat.label')} — ${t('site.title')}`,
+    description: t('collections.ayat.desc'),
+    breadcrumbs: [
+      { name: t('collections.ayat.label'), url: getLocalizedPath('/ayat', lang) }
+    ],
+  }}
+>
+  <Breadcrumbs items={[{ name: t('collections.ayat.label'), url: getLocalizedPath('/ayat', lang) }]} />
+
+  <!-- Page Header -->
+  <header class="py-8 md:py-12 border-b border-[var(--border-subtle)] mb-8">
+    <div class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[var(--accent-gold)] mb-3">
+      <span>{t('collections.title')}</span>
+      <span>•</span>
+      <span>{allAyat.length} {allAyat.length === 1 ? t('card.entry') : t('card.entries')}</span>
+    </div>
+
+    <h1 class="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-[var(--text-primary)]">
+      {t('collections.ayat.label')}
+    </h1>
+
+    <p class="mt-3 text-base sm:text-lg text-[var(--text-secondary)] max-w-2xl leading-relaxed">
+      {t('collections.ayat.desc')}
+    </p>
+
+    <!-- Tag Filter Bar -->
+    {uniqueTags.length > 0 && (
+      <div class="mt-6 flex flex-wrap items-center gap-2">
+        <span class="text-xs text-[var(--text-muted)] font-medium mr-1">{t('filter.byTag')}</span>
+        {uniqueTags.map((tag) => (
+          <a
+            href={getLocalizedPath(`/tags/${tag}`, lang)}
+            class="text-xs px-3 py-1 rounded-full bg-[var(--bg-subtle)] text-[var(--text-secondary)] hover:bg-[var(--accent-gold-subtle)] hover:text-[var(--accent-gold)] border border-[var(--border-subtle)] transition-colors"
+          >
+            #{lang === 'bn' ? (tagRecord[tag]?.nameBn || tagRecord[tag]?.name || tag) : (tagRecord[tag]?.name || tag)}
+          </a>
+        ))}
+      </div>
+    )}
+  </header>
+
+  <!-- Entries Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {paginatedEntries.map((entry) => (
+      <EntryCard
+        collection="ayat"
+        slug={entry.id}
+        data={entry.data}
+      />
+    ))}
+  </div>
+
+  <Pagination
+    currentPage={currentPage}
+    lastPage={totalPages}
+    nextUrl={totalPages > 1 ? getLocalizedPath('/ayat/page/2', lang) : undefined}
+    baseUrl={getLocalizedPath('/ayat', lang)}
+  />
+</Layout>

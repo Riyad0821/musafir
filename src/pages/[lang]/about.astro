@@ -1,0 +1,180 @@
+---
+import Layout from '../../components/Layout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { useTranslations, getLocalizedPath } from '../../i18n/utils';
+import type { SupportedLocale } from '../../i18n/ui';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en-gb' } },
+    { params: { lang: 'bn' } },
+  ];
+}
+
+const lang = Astro.params.lang as SupportedLocale;
+const t = useTranslations(lang);
+---
+
+<Layout
+  seo={{
+    title: `${t('nav.about')} — ${t('site.title')}`,
+    description: t('aboutTeaser.text'),
+    breadcrumbs: [{ name: t('nav.about'), url: getLocalizedPath('/about', lang) }],
+  }}
+>
+  <div class="max-w-3xl mx-auto">
+    <Breadcrumbs items={[{ name: t('nav.about'), url: getLocalizedPath('/about', lang) }]} />
+
+    <header class="py-8 md:py-12 border-b border-[var(--border-subtle)] mb-10">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider bg-[var(--accent-gold-subtle)] text-[var(--accent-gold)] border border-[var(--accent-gold)]/30 mb-3">
+        {lang === 'bn' ? 'উদ্দেশ্য ও সত্যতা' : 'Philosophy & Purpose'}
+      </div>
+      <h1 class="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-[var(--text-primary)]">
+        {t('site.title')}
+      </h1>
+      <p class="font-serif italic text-lg sm:text-xl text-[var(--text-secondary)] mt-3">
+        "{t('site.tagline')}"
+      </p>
+    </header>
+
+    <article class="reading-prose space-y-8 text-[var(--text-secondary)]">
+      {lang === 'bn' ? (
+        <>
+          <section>
+            <h2 class="text-2xl font-serif font-bold text-[var(--text-primary)] mb-4">
+              মুসাফির (المُسَافِر) বা পথিকের ভাবনা
+            </h2>
+            <p>
+              আব্দুল্লাহ ইবনে উমর (রা.) থেকে বর্ণিত এক প্রসিদ্ধ হাদিসে রাসূলুল্লাহ ﷺ নির্দেশ প্রদান করেছিলেন:
+            </p>
+            <blockquote class="italic border-l-3 border-[var(--accent-gold)] pl-4 my-4 text-[var(--text-primary)]">
+              "দুনিয়াতে এমনভাবে বসবাস করো যেন তুমি একজন অপরিচিত ব্যক্তি কিংবা পথ অতিক্রমকারী কোনো পরিব্রাজক।"
+              <span class="block text-xs text-[var(--text-muted)] mt-1 font-sans not-italic">— সহীহ বুখারী ৬৪১৬</span>
+            </blockquote>
+            <p>
+              একজন পথিক পথের জন্য কেবল প্রয়োজনীয় ও কল্যাণকর পাথেয়টুকু সঙ্গে রাখে। তথ্যের কোলাহল এবং অহেতুক ব্যস্ততার এই যুগে <strong>মুসাফির</strong> হলো ঐশী সত্য, নববী হেদায়েত, ঐতিহাসিক স্মৃতি এবং আত্মিক অনুধ্যানের একটি নির্জন ও নীরব আশ্রয়স্থল।
+            </p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-serif font-bold text-[var(--text-primary)] mb-4">
+              সত্যতা ও সূত্র যাচাই নীতিমালা
+            </h2>
+            <p>
+              নির্ভরযোগ্যতা ও সঠিক উদ্ধৃতি এই সাইটের সবচেয়ে গুরুত্বপূর্ণ ভিত্তি। প্রতিটি সংকলনে তার প্রাসঙ্গিক সূত্র ও রেফারেন্স স্পষ্টভাবে প্রদর্শিত হয়:
+            </p>
+            
+            <div class="space-y-4 my-6">
+              <div class="p-5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-subtle)]">
+                <h3 class="font-serif font-semibold text-base text-[var(--text-primary)] mb-1">
+                  ১. কুরআনের আয়াত
+                </h3>
+                <p class="text-sm">
+                  সবগুলো আরবি আয়াত বিশুদ্ধ উসমানি লিপিতে পূর্ণ হরকতসহ সন্নিবেশিত। নির্ভরযোগ্য বাংলা অনুবাদ ও প্রামাণ্য তাফসীরের আলোকে প্রতিটি আয়াতের অর্থ উদ্ধৃত করা হয়েছে।
+                </p>
+              </div>
+
+              <div class="p-5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-subtle)]">
+                <h3 class="font-serif font-semibold text-base text-[var(--text-primary)] mb-1">
+                  ২. নববী হাদিস
+                </h3>
+                <p class="text-sm">
+                  হাদিসসমূহ প্রধান বিশুদ্ধ গ্রন্থাবলী (যেমন সিহাহ সিত্তাহ) থেকে সংকলিত। প্রতিটি হাদিসে মূল বর্ণনাকারী সাহাবি, কিতাব ও হাদিস নম্বর এবং স্বীকৃত মুহাদ্দিসদের তাহকিক/মান (যেমন <em>সহীহ</em> বা <em>হাসান</em>) উল্লেখ থাকে। অপ্রমাণিত বা বানোয়াট বর্ণনা বর্জনীয়।
+                </p>
+              </div>
+
+              <div class="p-5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-subtle)]">
+                <h3 class="font-serif font-semibold text-base text-[var(--text-primary)] mb-1">
+                  ৩. ঐতিহাসিক ঘটনা ও সাহাবিদের জীবনী
+                </h3>
+                <p class="text-sm">
+                  ঐতিহাসিক ঘটনা ও সাহাবিদের জীবনী প্রামাণ্য সিরাত ও রিজাল গ্রন্থাবলীর (যেমন ইবনে হিশামের <em>আস-সিরাহ আন-নবাবিয়্যাহ</em>, ইবনে কাসীরের <em>আল-বিদায়াহ ওয়ান-নিহায়াহ</em>) সাথে মিলিয়ে হিজরি ও ঈসায়ী সনসহ উপস্থাপন করা হয়।
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <section class="p-6 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-[var(--text-primary)]">
+            <h2 class="font-serif text-lg font-bold text-amber-800 dark:text-amber-300 mb-2 flex items-center gap-2">
+              <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+              </svg>
+              পাঠকদের জন্য গুরুত্বপূর্ণ বিজ্ঞপ্তি
+            </h2>
+            <p class="text-sm leading-relaxed text-[var(--text-secondary)]">
+              মুসাফির সম্পূর্ণ ব্যক্তিগত উদ্যোগে তৈরি এক সংগ্রহশালা, যার মূল উদ্দেশ্য পাঠকদের দ্বীনি চেতনা ও আত্মিক স্মরণকে সতেজ রাখা। <strong>এটি কোনো প্রাতিষ্ঠানিক ফতোয়া প্রদানের ক্ষেত্র নয়।</strong> জীবনের জটিল আইনি, পারিবারিক কিংবা লেনদেন সংক্রান্ত মাসআলা-মাসায়েলের ক্ষেত্রে অভিজ্ঞ বিজ্ঞ আলেম ও দায়িত্বশীল ইসলামি গবেষণা প্রতিষ্ঠানের শরণাপন্ন হোন।
+            </p>
+          </section>
+        </>
+      ) : (
+        <>
+          <section>
+            <h2 class="text-2xl font-serif font-bold text-[var(--text-primary)] mb-4">
+              The Idea of the Traveller (المُسَافِر)
+            </h2>
+            <p>
+              In a celebrated prophetic tradition, the Prophet Muhammad ﷺ advised Abdullah ibn Umar (may Allah be pleased with them both):
+            </p>
+            <blockquote class="italic border-l-3 border-[var(--accent-gold)] pl-4 my-4 text-[var(--text-primary)]">
+              "Be in this world as though you were a stranger or a traveller passing along a path."
+              <span class="block text-xs text-[var(--text-muted)] mt-1 font-sans not-italic">— Sahih al-Bukhari 6416</span>
+            </blockquote>
+            <p>
+              A traveller carries only what brings benefit on the journey. In an era overwhelmed by sensory noise and ephemeral content, <strong>Musafir</strong> serves as a calm, contemplative way-station: a curated personal notebook of divine revelation, prophetic wisdom, historical memory, and moral reflection.
+            </p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-serif font-bold text-[var(--text-primary)] mb-4">
+              Core Sourcing & Authenticity Policy
+            </h2>
+            <p>
+              Authenticity and accurate attribution are the foundational pillars of this site. Every single entry visibly states its source, context, and reference:
+            </p>
+            
+            <div class="space-y-4 my-6">
+              <div class="p-5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-subtle)]">
+                <h3 class="font-serif font-semibold text-base text-[var(--text-primary)] mb-1">
+                  1. Quranic Ayat
+                </h3>
+                <p class="text-sm">
+                  All Arabic Quranic texts follow verified Uthmani script standards with intact tashkeel (diacritical marks). English translations are drawn from reputable academic and scholarly sources and are explicitly cited by surah and ayah number.
+                </p>
+              </div>
+
+              <div class="p-5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-subtle)]">
+                <h3 class="font-serif font-semibold text-base text-[var(--text-primary)] mb-1">
+                  2. Prophetic Hadith
+                </h3>
+                <p class="text-sm">
+                  Traditions are taken from established canonical collections. Every hadith entry visibly displays the primary Sahabi narrator, canonical reference, and recognized scholarly grading (e.g., <em>Sahih</em> or <em>Hasan</em>).
+                </p>
+              </div>
+
+              <div class="p-5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-subtle)]">
+                <h3 class="font-serif font-semibold text-base text-[var(--text-primary)] mb-1">
+                  3. Events & Sahaba Accounts
+                </h3>
+                <p class="text-sm">
+                  Historical accounts and biographical narratives are cross-referenced with early chronicles, providing both Hijri and Gregorian dates.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <section class="p-6 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-[var(--text-primary)]">
+            <h2 class="font-serif text-lg font-bold text-amber-800 dark:text-amber-300 mb-2 flex items-center gap-2">
+              <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+              </svg>
+              Important Reader Notice
+            </h2>
+            <p class="text-sm leading-relaxed text-[var(--text-secondary)]">
+              Musafir is a personal, curated notebook created solely for contemplation, spiritual uplifting, and remembrance. <strong>It is not an institution of jurisprudence, nor does it provide legal verdicts (fatawa).</strong> Readers seeking rulings should consult qualified, trusted local scholars.
+            </p>
+          </section>
+        </>
+      )}
+    </article>
+  </div>
+</Layout>

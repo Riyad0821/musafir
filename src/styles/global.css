@@ -48,6 +48,22 @@
   }
 }
 
+/* Bengali Typography Rules */
+html[lang="bn"] body,
+html[lang="bn"] .reading-prose,
+.bn-text {
+  font-family: 'Hind Siliguri', system-ui, sans-serif;
+  letter-spacing: 0.01em;
+  line-height: 1.85;
+}
+
+html[lang="bn"] h1,
+html[lang="bn"] h2,
+html[lang="bn"] h3 {
+  font-family: 'Hind Siliguri', Georgia, serif;
+  font-weight: 700;
+}
+
 /* Custom Arabic Typography Rules */
 .arabic-text {
   font-family: 'Amiri', 'Traditional Arabic', 'Scheherazade New', serif;

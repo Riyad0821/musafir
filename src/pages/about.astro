@@ -1,18 +1,21 @@
 ---
 import Layout from '../components/Layout.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
-import { SITE_CONFIG } from '../config';
+import { getLangFromUrl, useTranslations, getLocalizedPath } from '../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 ---
 
 <Layout
   seo={{
-    title: 'About Musafir — Philosophy & Sourcing Policy',
-    description: 'The purpose, sourcing standards, authenticity principles, and editorial policy behind the Musafir notebook.',
-    breadcrumbs: [{ name: 'About', url: '/about' }],
+    title: `${t('nav.about')} — ${t('site.title')}`,
+    description: t('aboutTeaser.text'),
+    breadcrumbs: [{ name: t('nav.about'), url: getLocalizedPath('/about', lang) }],
   }}
 >
   <div class="max-w-3xl mx-auto">
-    <Breadcrumbs items={[{ name: 'About', url: '/about' }]} />
+    <Breadcrumbs items={[{ name: t('nav.about'), url: getLocalizedPath('/about', lang) }]} />
 
     <header class="py-8 md:py-12 border-b border-[var(--border-subtle)] mb-10">
       <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider bg-[var(--accent-gold-subtle)] text-[var(--accent-gold)] border border-[var(--accent-gold)]/30 mb-3">
@@ -22,7 +25,7 @@ import { SITE_CONFIG } from '../config';
         About Musafir
       </h1>
       <p class="font-serif italic text-lg sm:text-xl text-[var(--text-secondary)] mt-3">
-        "{SITE_CONFIG.tagline}"
+        "{t('site.tagline')}"
       </p>
     </header>
 
@@ -57,7 +60,7 @@ import { SITE_CONFIG } from '../config';
               1. Quranic Ayat
             </h3>
             <p class="text-sm">
-              All Arabic Quranic texts follow verified Uthmani script standards with intact tashkeel (diacritical marks). English translations are drawn from reputable academic and scholarly sources (such as Saheeh International, M.A.S. Abdel Haleem, or The Clear Quran) and are explicitly cited by surah and ayah number.
+              All Arabic Quranic texts follow verified Uthmani script standards with intact tashkeel (diacritical marks). Translations are drawn from reputable academic and scholarly sources and are explicitly cited by surah and ayah number.
             </p>
           </div>
 
@@ -66,7 +69,7 @@ import { SITE_CONFIG } from '../config';
               2. Prophetic Hadith
             </h3>
             <p class="text-sm">
-              Traditions are taken from established canonical collections (e.g., the Kutub as-Sittah). Every hadith entry visibly displays the primary Sahabi narrator, the canonical book and hadith number, the translation source, and recognized scholarly grading (e.g., <em>Sahih</em> or <em>Hasan</em>). Unverified or fabricated narrations are strictly excluded.
+              Traditions are taken from established canonical collections. Every hadith entry visibly displays the primary Sahabi narrator, the canonical book and hadith number, the translation source, and recognized scholarly grading (e.g., <em>Sahih</em> or <em>Hasan</em>). Unverified or fabricated narrations are strictly excluded.
             </p>
           </div>
 
@@ -75,7 +78,7 @@ import { SITE_CONFIG } from '../config';
               3. Events & Sahaba Accounts
             </h3>
             <p class="text-sm">
-              Historical accounts and biographical narratives are cross-referenced with early chronicles (such as Ibn Hisham's <em>As-Seerah an-Nabawiyyah</em>, Ibn Kathir's <em>Al-Bidayah wan-Nihayah</em>, and Al-Dhahabi's <em>Siyar A'lam an-Nubala</em>), providing both Hijri and Gregorian dates.
+              Historical accounts and biographical narratives are cross-referenced with early chronicles, providing both Hijri and Gregorian dates.
             </p>
           </div>
 
@@ -84,7 +87,7 @@ import { SITE_CONFIG } from '../config';
               4. Writings & Reflections
             </h3>
             <p class="text-sm">
-              Wisdom literature, spiritual aphorisms, and poetry are attributed to their original authors and classic works (e.g., Ibn al-Qayyim, Hasan al-Basri, Imam al-Ghazali) with transparent distinction between original texts and personal reflections.
+              Wisdom literature, spiritual aphorisms, and poetry are attributed to their original authors and classic works with transparent distinction between original texts and personal reflections.
             </p>
           </div>
         </div>
@@ -100,15 +103,6 @@ import { SITE_CONFIG } from '../config';
         </h2>
         <p class="text-sm leading-relaxed text-[var(--text-secondary)]">
           Musafir is an individual’s personal, curated notebook created solely for contemplation, spiritual uplifting, and remembrance. <strong>It is not an institution of jurisprudence, nor does it provide legal verdicts (fatawa).</strong> Readers seeking rulings on complex legal, family, or contractual matters should consult qualified, trusted local scholars and authorized Islamic legal bodies.
-        </p>
-      </section>
-
-      <section>
-        <h2 class="text-2xl font-serif font-bold text-[var(--text-primary)] mb-4">
-          Architecture & Privacy
-        </h2>
-        <p>
-          Musafir is engineered as an ultra-fast, static website with zero third-party tracking scripts, zero databases, and zero server-side state. All writings reside as transparent Markdown files in the repository, and full-text search operates entirely in your browser using Pagefind.
         </p>
       </section>
     </article>

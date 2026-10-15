@@ -1,0 +1,226 @@
+---
+import Layout from '../../../components/Layout.astro';
+import Breadcrumbs from '../../../components/Breadcrumbs.astro';
+import EntryCard from '../../../components/EntryCard.astro';
+import { getCollection } from 'astro:content';
+import tagsData from '../../../data/tags.json';
+import { useTranslations, getLocalizedPath } from '../../../i18n/utils';
+import type { SupportedLocale } from '../../../i18n/ui';
+
+export async function getStaticPaths() {
+  const [ayat, hadith, events, sahaba, writings] = await Promise.all([
+    getCollection('ayat', ({ data }) => !data.draft),
+    getCollection('hadith', ({ data }) => !data.draft),
+    getCollection('events', ({ data }) => !data.draft),
+    getCollection('sahaba', ({ data }) => !data.draft),
+    getCollection('writings', ({ data }) => !data.draft),
+  ]);
+
+  const tagRecord = tagsData as Record<string, { name: string; nameBn?: string; description: string; descriptionBn?: string }>;
+  const tagSet = new Set<string>(Object.keys(tagRecord));
+
+  const addTags = (items: any[]) => {
+    for (const item of items) {
+      for (const t of item.data.tags || []) {
+        tagSet.add(t);
+      }
+    }
+  };
+
+  addTags(ayat);
+  addTags(hadith);
+  addTags(events);
+  addTags(sahaba);
+  addTags(writings);
+
+  const locales: SupportedLocale[] = ['en-gb', 'bn'];
+  const paths = [];
+
+  for (const lang of locales) {
+    for (const tag of tagSet) {
+      const matchingAyat = ayat.filter((e) => e.data.tags?.includes(tag));
+      const matchingHadith = hadith.filter((e) => e.data.tags?.includes(tag));
+      const matchingEvents = events.filter((e) => e.data.tags?.includes(tag));
+      const matchingSahaba = sahaba.filter((e) => e.data.tags?.includes(tag));
+      const matchingWritings = writings.filter((e) => e.data.tags?.includes(tag));
+
+      paths.push({
+        params: { lang, tag },
+        props: {
+          lang,
+          tag,
+          tagInfo: tagRecord[tag] || {
+            name: tag.replace(/-/g, ' '),
+            description: `Curated reflections and historical accounts corresponding to ${tag}.`,
+          },
+          matchingAyat,
+          matchingHadith,
+          matchingEvents,
+          matchingSahaba,
+          matchingWritings,
+          totalCount:
+            matchingAyat.length +
+            matchingHadith.length +
+            matchingEvents.length +
+            matchingSahaba.length +
+            matchingWritings.length,
+        },
+      });
+    }
+  }
+
+  return paths;
+}
+
+const {
+  lang,
+  tag,
+  tagInfo,
+  matchingAyat,
+  matchingHadith,
+  matchingEvents,
+  matchingSahaba,
+  matchingWritings,
+  totalCount,
+} = Astro.props;
+
+const t = useTranslations(lang);
+const displayName = lang === 'bn' ? (tagInfo.nameBn || tagInfo.name) : tagInfo.name;
+const description = lang === 'bn' ? (tagInfo.descriptionBn || tagInfo.description) : tagInfo.description;
+---
+
+<Layout
+  seo={{
+    title: `${displayName} — ${t('site.title')}`,
+    description: description,
+    breadcrumbs: [
+      { name: t('nav.tags'), url: getLocalizedPath('/tags', lang) },
+      { name: displayName, url: getLocalizedPath(`/tags/${tag}`, lang) },
+    ],
+  }}
+>
+  <Breadcrumbs
+    items={[
+      { name: t('nav.tags'), url: getLocalizedPath('/tags', lang) },
+      { name: displayName, url: getLocalizedPath(`/tags/${tag}`, lang) },
+    ]}
+  />
+
+  <header class="py-8 md:py-12 border-b border-[var(--border-subtle)] mb-10">
+    <div class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[var(--accent-gold)] mb-3">
+      <span>{t('nav.tags')}</span>
+      <span>•</span>
+      <span>{totalCount} {totalCount === 1 ? t('card.entry') : t('card.entries')}</span>
+    </div>
+
+    <h1 class="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-[var(--text-primary)]">
+      #{displayName}
+    </h1>
+
+    <div class="mt-4 p-5 sm:p-6 rounded-2xl bg-[var(--bg-subtle)]/70 border-l-4 border-[var(--accent-gold)] text-base sm:text-lg text-[var(--text-secondary)] leading-relaxed max-w-3xl">
+      {description}
+    </div>
+  </header>
+
+  <div class="space-y-16">
+    {matchingAyat.length > 0 && (
+      <section aria-labelledby="ayat-group-heading">
+        <div class="flex items-center justify-between border-b border-[var(--border-subtle)] pb-3 mb-6">
+          <h2 id="ayat-group-heading" class="font-serif text-2xl font-bold text-[var(--text-primary)] flex items-center gap-2">
+            <span>📖</span>
+            <span>{t('collections.ayat.label')}</span>
+            <span class="text-sm font-normal text-[var(--text-muted)]">({matchingAyat.length})</span>
+          </h2>
+          <a href={getLocalizedPath('/ayat', lang)} class="text-xs text-[var(--accent-gold)] hover:underline">
+            {lang === 'bn' ? 'সবগুলো আয়াত দেখুন →' : 'View all Ayat →'}
+          </a>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {matchingAyat.map((entry: any) => (
+            <EntryCard collection="ayat" slug={entry.id} data={entry.data} />
+          ))}
+        </div>
+      </section>
+    )}
+
+    {matchingHadith.length > 0 && (
+      <section aria-labelledby="hadith-group-heading">
+        <div class="flex items-center justify-between border-b border-[var(--border-subtle)] pb-3 mb-6">
+          <h2 id="hadith-group-heading" class="font-serif text-2xl font-bold text-[var(--text-primary)] flex items-center gap-2">
+            <span>✨</span>
+            <span>{t('collections.hadith.label')}</span>
+            <span class="text-sm font-normal text-[var(--text-muted)]">({matchingHadith.length})</span>
+          </h2>
+          <a href={getLocalizedPath('/hadith', lang)} class="text-xs text-[var(--accent-gold)] hover:underline">
+            {lang === 'bn' ? 'সবগুলো হাদিস দেখুন →' : 'View all Hadith →'}
+          </a>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {matchingHadith.map((entry: any) => (
+            <EntryCard collection="hadith" slug={entry.id} data={entry.data} />
+          ))}
+        </div>
+      </section>
+    )}
+
+    {matchingEvents.length > 0 && (
+      <section aria-labelledby="events-group-heading">
+        <div class="flex items-center justify-between border-b border-[var(--border-subtle)] pb-3 mb-6">
+          <h2 id="events-group-heading" class="font-serif text-2xl font-bold text-[var(--text-primary)] flex items-center gap-2">
+            <span>🗓️</span>
+            <span>{t('collections.events.label')}</span>
+            <span class="text-sm font-normal text-[var(--text-muted)]">({matchingEvents.length})</span>
+          </h2>
+          <a href={getLocalizedPath('/events', lang)} class="text-xs text-[var(--accent-gold)] hover:underline">
+            {lang === 'bn' ? 'সবগুলো ঘটনা দেখুন →' : 'View all Events →'}
+          </a>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {matchingEvents.map((entry: any) => (
+            <EntryCard collection="events" slug={entry.id} data={entry.data} />
+          ))}
+        </div>
+      </section>
+    )}
+
+    {matchingSahaba.length > 0 && (
+      <section aria-labelledby="sahaba-group-heading">
+        <div class="flex items-center justify-between border-b border-[var(--border-subtle)] pb-3 mb-6">
+          <h2 id="sahaba-group-heading" class="font-serif text-2xl font-bold text-[var(--text-primary)] flex items-center gap-2">
+            <span>👥</span>
+            <span>{t('collections.sahaba.label')}</span>
+            <span class="text-sm font-normal text-[var(--text-muted)]">({matchingSahaba.length})</span>
+          </h2>
+          <a href={getLocalizedPath('/sahaba', lang)} class="text-xs text-[var(--accent-gold)] hover:underline">
+            {lang === 'bn' ? 'সাহাবিদের সকল জীবনী দেখুন →' : 'View all Sahaba →'}
+          </a>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {matchingSahaba.map((entry: any) => (
+            <EntryCard collection="sahaba" slug={entry.id} data={entry.data} />
+          ))}
+        </div>
+      </section>
+    )}
+
+    {matchingWritings.length > 0 && (
+      <section aria-labelledby="writings-group-heading">
+        <div class="flex items-center justify-between border-b border-[var(--border-subtle)] pb-3 mb-6">
+          <h2 id="writings-group-heading" class="font-serif text-2xl font-bold text-[var(--text-primary)] flex items-center gap-2">
+            <span>✍️</span>
+            <span>{t('collections.writings.label')}</span>
+            <span class="text-sm font-normal text-[var(--text-muted)]">({matchingWritings.length})</span>
+          </h2>
+          <a href={getLocalizedPath('/writings', lang)} class="text-xs text-[var(--accent-gold)] hover:underline">
+            {lang === 'bn' ? 'সকল লেখা দেখুন →' : 'View all Writings →'}
+          </a>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {matchingWritings.map((entry: any) => (
+            <EntryCard collection="writings" slug={entry.id} data={entry.data} />
+          ))}
+        </div>
+      </section>
+    )}
+  </div>
+</Layout>

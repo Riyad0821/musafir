@@ -3,6 +3,10 @@ import Layout from '../components/Layout.astro';
 import EntryCard from '../components/EntryCard.astro';
 import { getCollection } from 'astro:content';
 import { SITE_CONFIG } from '../config';
+import { getLangFromUrl, useTranslations, getLocalizedPath } from '../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 
 // Load entries from all collections
 const [ayat, hadith, events, sahaba, writings] = await Promise.all([
@@ -13,7 +17,6 @@ const [ayat, hadith, events, sahaba, writings] = await Promise.all([
   getCollection('writings', ({ data }) => !data.draft),
 ]);
 
-// Find a featured entry (priority: any with featured: true)
 const allEntries = [
   ...ayat.map((e) => ({ collection: 'ayat' as const, slug: e.id, data: e.data })),
   ...hadith.map((e) => ({ collection: 'hadith' as const, slug: e.id, data: e.data })),
@@ -28,54 +31,54 @@ const featuredEntry = allEntries.find((e) => e.data.featured) || allEntries[0];
 const latestEntries = allEntries.slice(0, 6);
 
 const collectionStats = [
-  { id: 'ayat', label: 'Quranic Ayat', count: ayat.length, href: '/ayat', desc: 'Direct divine reminders & guidance', icon: '📖' },
-  { id: 'hadith', label: 'Prophetic Hadith', count: hadith.length, href: '/hadith', desc: 'Traditions, guidance & sayings', icon: '✨' },
-  { id: 'events', label: 'Islamic Events', count: events.length, href: '/events', desc: 'Milestones, eras & chronology', icon: '🗓️' },
-  { id: 'sahaba', label: 'The Sahaba', count: sahaba.length, href: '/sahaba', desc: 'Stories of faith & steadfastness', icon: '👥' },
-  { id: 'writings', label: 'Writings & Quotes', count: writings.length, href: '/writings', desc: 'Contemplative articles & poetry', icon: '✍️' },
+  { id: 'ayat', label: t('collections.ayat.label'), count: ayat.length, href: getLocalizedPath('/ayat', lang), desc: t('collections.ayat.desc'), icon: '📖' },
+  { id: 'hadith', label: t('collections.hadith.label'), count: hadith.length, href: getLocalizedPath('/hadith', lang), desc: t('collections.hadith.desc'), icon: '✨' },
+  { id: 'events', label: t('collections.events.label'), count: events.length, href: getLocalizedPath('/events', lang), desc: t('collections.events.desc'), icon: '🗓️' },
+  { id: 'sahaba', label: t('collections.sahaba.label'), count: sahaba.length, href: getLocalizedPath('/sahaba', lang), desc: t('collections.sahaba.desc'), icon: '👥' },
+  { id: 'writings', label: t('collections.writings.label'), count: writings.length, href: getLocalizedPath('/writings', lang), desc: t('collections.writings.desc'), icon: '✍️' },
 ];
 ---
 
 <Layout
   seo={{
-    title: undefined, // uses Musafir - Tagline
-    description: SITE_CONFIG.description,
+    title: undefined,
+    description: t('site.description'),
     schemaType: 'website',
   }}
 >
   <!-- Hero Section -->
   <section class="text-center py-10 md:py-20 relative">
     <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium bg-[var(--accent-gold-subtle)] text-[var(--accent-gold)] border border-[var(--accent-gold)]/30 mb-6">
-      <span class="arabic-text text-sm" dir="rtl" lang="ar">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</span>
+      <span class="arabic-text text-sm" dir="rtl" lang="ar">{t('hero.badge')}</span>
     </div>
 
     <h1 class="font-serif text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-[var(--text-primary)] max-w-3xl mx-auto leading-tight">
-      {SITE_CONFIG.name}
+      {t('site.title')}
     </h1>
 
     <p class="font-serif italic text-lg sm:text-2xl text-[var(--text-secondary)] mt-4 max-w-2xl mx-auto leading-relaxed">
-      "{SITE_CONFIG.tagline}"
+      "{t('site.tagline')}"
     </p>
 
     <p class="text-sm sm:text-base text-[var(--text-muted)] mt-4 max-w-xl mx-auto leading-relaxed">
-      A serene, personal sanctuary gathering favorite Quranic revelations, prophetic narrations, historical moments, and contemplations for the spiritual wayfarer.
+      {t('hero.subtext')}
     </p>
 
     <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
       <a
-        href="/search"
+        href={getLocalizedPath('/search', lang)}
         class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[var(--text-primary)] text-[var(--bg-base)] hover:bg-[var(--accent-gold)] transition-colors text-sm font-medium shadow-sm"
       >
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
         </svg>
-        Search the Notebook
+        {t('hero.searchBtn')}
       </a>
       <a
-        href="/about"
+        href={getLocalizedPath('/about', lang)}
         class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-[var(--border-subtle)] hover:border-[var(--accent-gold)] transition-colors text-sm font-medium shadow-xs"
       >
-        About & Sourcing Policy
+        {t('hero.aboutBtn')}
       </a>
     </div>
   </section>
@@ -87,10 +90,10 @@ const collectionStats = [
         <div class="flex items-center gap-2">
           <span class="w-2.5 h-2.5 rounded-full bg-[var(--accent-gold)] animate-pulse"></span>
           <h2 id="featured-entry-heading" class="text-xs font-bold uppercase tracking-wider text-[var(--accent-gold)]">
-            Featured Reflection
+            {t('featured.title')}
           </h2>
         </div>
-        <span class="text-xs text-[var(--text-muted)]">Highlighted for contemplation</span>
+        <span class="text-xs text-[var(--text-muted)]">{t('featured.subtitle')}</span>
       </div>
 
       <div class="relative">
@@ -109,12 +112,12 @@ const collectionStats = [
     <div class="flex items-center justify-between mb-8 border-b border-[var(--border-subtle)] pb-4">
       <div>
         <h2 id="collections-heading" class="font-serif text-2xl font-bold text-[var(--text-primary)]">
-          Explore by Collection
+          {t('collections.title')}
         </h2>
-        <p class="text-sm text-[var(--text-muted)] mt-1">Five curated branches of remembrance</p>
+        <p class="text-sm text-[var(--text-muted)] mt-1">{t('collections.subtitle')}</p>
       </div>
-      <a href="/tags" class="text-xs font-medium text-[var(--accent-gold)] hover:underline hidden sm:inline-block">
-        Browse by Tag Index →
+      <a href={getLocalizedPath('/tags', lang)} class="text-xs font-medium text-[var(--accent-gold)] hover:underline hidden sm:inline-block">
+        {t('collections.browseTags')}
       </a>
     </div>
 
@@ -134,7 +137,7 @@ const collectionStats = [
             </p>
           </div>
           <div class="mt-4 pt-3 border-t border-[var(--border-subtle)]/60 flex items-center justify-between text-xs text-[var(--text-muted)]">
-            <span>{col.count} {col.count === 1 ? 'entry' : 'entries'}</span>
+            <span>{col.count} {col.count === 1 ? t('card.entry') : t('card.entries')}</span>
             <span class="text-[var(--accent-gold)] group-hover:translate-x-1 transition-transform">→</span>
           </div>
         </a>
@@ -147,12 +150,12 @@ const collectionStats = [
     <div class="flex items-center justify-between mb-8 border-b border-[var(--border-subtle)] pb-4">
       <div>
         <h2 id="latest-entries-heading" class="font-serif text-2xl font-bold text-[var(--text-primary)]">
-          Recent Additions
+          {t('recent.title')}
         </h2>
-        <p class="text-sm text-[var(--text-muted)] mt-1">Chronological notebook entries</p>
+        <p class="text-sm text-[var(--text-muted)] mt-1">{t('recent.subtitle')}</p>
       </div>
-      <a href="/search" class="text-xs font-medium text-[var(--accent-gold)] hover:underline">
-        Search All ({allEntries.length}) →
+      <a href={getLocalizedPath('/search', lang)} class="text-xs font-medium text-[var(--accent-gold)] hover:underline">
+        {t('recent.searchAll')}
       </a>
     </div>
 
@@ -172,18 +175,17 @@ const collectionStats = [
     <div class="max-w-2xl mx-auto space-y-4">
       <div class="text-[var(--accent-gold)] text-3xl font-serif">✦</div>
       <h2 class="font-serif text-2xl sm:text-3xl font-bold text-[var(--text-primary)]">
-        Why Musafir Exists
+        {t('aboutTeaser.title')}
       </h2>
       <p class="text-sm sm:text-base text-[var(--text-secondary)] leading-relaxed">
-        The life of this world is like a journey under the shade of a tree before moving onward. Musafir is a personal digital notebook to anchor verified wisdom, preserve authentic narrations, and provide a quiet reading atmosphere free of algorithmic noise.
+        {t('aboutTeaser.text')}
       </p>
       <div class="pt-2">
         <a
-          href="/about"
+          href={getLocalizedPath('/about', lang)}
           class="inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--accent-gold)] hover:text-[var(--accent-gold-hover)] hover:underline"
         >
-          <span>Read our full sourcing and verification policy</span>
-          <span>→</span>
+          <span>{t('aboutTeaser.link')}</span>
         </a>
       </div>
     </div>

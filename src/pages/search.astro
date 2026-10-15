@@ -3,50 +3,51 @@ import Layout from '../components/Layout.astro';
 import SearchBox from '../components/SearchBox.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
 import tagsData from '../data/tags.json';
+import { getLangFromUrl, useTranslations, getLocalizedPath } from '../i18n/utils';
 
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 const popularTags = Object.keys(tagsData).slice(0, 6);
-const tagRecord = tagsData as Record<string, { name: string; description: string }>;
+const tagRecord = tagsData as Record<string, { name: string; nameBn?: string; description: string; descriptionBn?: string }>;
 ---
 
 <Layout
   seo={{
-    title: 'Search Reflections & Narrations',
-    description: 'Instant client-side full-text search across Quranic ayat, hadith, events, sahaba stories, and writings.',
-    noindex: true, // As specified in section 3 & 6
-    breadcrumbs: [{ name: 'Search', url: '/search' }],
+    title: `${t('search.title')} — ${t('site.title')}`,
+    description: t('search.subtitle'),
+    noindex: true,
+    breadcrumbs: [{ name: t('nav.search'), url: getLocalizedPath('/search', lang) }],
   }}
 >
-  <Breadcrumbs items={[{ name: 'Search', url: '/search' }]} />
+  <Breadcrumbs items={[{ name: t('nav.search'), url: getLocalizedPath('/search', lang) }]} />
 
   <header class="text-center py-8 md:py-12 max-w-2xl mx-auto">
     <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider bg-[var(--accent-gold-subtle)] text-[var(--accent-gold)] border border-[var(--accent-gold)]/30 mb-3">
-      Client-Side Index
+      {lang === 'bn' ? 'ব্রাউজার ভিত্তিক অনুসন্ধান' : 'Client-Side Index'}
     </div>
 
     <h1 class="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-[var(--text-primary)]">
-      Search the Notebook
+      {t('search.title')}
     </h1>
 
     <p class="mt-3 text-sm sm:text-base text-[var(--text-secondary)] leading-relaxed">
-      Explore verses, sayings, narrators, translations, and historical chronicles with zero-latency local search.
+      {t('search.subtitle')}
     </p>
 
-    <!-- Quick search suggestion pills -->
     <div class="mt-6 flex flex-wrap items-center justify-center gap-1.5 text-xs">
-      <span class="text-[var(--text-muted)] mr-1">Popular searches:</span>
+      <span class="text-[var(--text-muted)] mr-1">{t('search.popular')}</span>
       {popularTags.map((tag) => (
         <a
-          href={`/search?q=${tag}`}
+          href={getLocalizedPath(`/search?q=${tag}`, lang)}
           class="px-2.5 py-1 rounded-full bg-[var(--bg-subtle)] text-[var(--text-secondary)] hover:bg-[var(--accent-gold-subtle)] hover:text-[var(--accent-gold)] border border-[var(--border-subtle)] transition-colors"
         >
-          {tagRecord[tag]?.name.split(' ')[0] || tag}
+          {lang === 'bn' ? (tagRecord[tag]?.nameBn?.split(' ')[0] || tag) : (tagRecord[tag]?.name.split(' ')[0] || tag)}
         </a>
       ))}
     </div>
   </header>
 
-  <!-- Search UI Container -->
   <div class="my-8">
-    <SearchBox autofocus={true} />
+    <SearchBox autofocus={true} placeholder={t('search.placeholder')} />
   </div>
 </Layout>

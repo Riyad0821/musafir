@@ -1,4 +1,6 @@
 ---
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+
 export interface Props {
   currentPage: number;
   lastPage: number;
@@ -8,10 +10,8 @@ export interface Props {
 }
 
 const { currentPage, lastPage, prevUrl, nextUrl, baseUrl } = Astro.props;
-
-if (lastPage <= 1) {
-  // No pagination needed if only 1 page
-}
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 ---
 
 {lastPage > 1 && (
@@ -27,14 +27,14 @@ if (lastPage <= 1) {
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
           </svg>
-          Previous
+          {t('pagination.prev')}
         </a>
       ) : (
         <span class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-transparent text-sm font-medium text-[var(--text-muted)] opacity-40 cursor-not-allowed">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
           </svg>
-          Previous
+          {t('pagination.prev')}
         </span>
       )}
     </div>
@@ -42,7 +42,7 @@ if (lastPage <= 1) {
     <!-- Page Indicator -->
     <div class="hidden sm:flex items-center text-sm text-[var(--text-muted)]">
       <span>
-        Page <span class="font-semibold text-[var(--text-primary)]">{currentPage}</span> of <span class="font-semibold text-[var(--text-primary)]">{lastPage}</span>
+        {t('pagination.pageOf', { current: currentPage, total: lastPage })}
       </span>
     </div>
 
@@ -54,14 +54,14 @@ if (lastPage <= 1) {
           class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-[var(--border-subtle)] text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--accent-gold)] hover:bg-[var(--bg-subtle)] transition-colors"
           rel="next"
         >
-          Next
+          {t('pagination.next')}
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
           </svg>
         </a>
       ) : (
         <span class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-transparent text-sm font-medium text-[var(--text-muted)] opacity-40 cursor-not-allowed">
-          Next
+          {t('pagination.next')}
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
           </svg>

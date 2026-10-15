@@ -1,50 +1,74 @@
 {
   "tawhid": {
     "name": "Tawhid (Divine Oneness)",
-    "description": "The foundational pillar of Islamic belief, affirming the absolute oneness, sovereignty, and uniqueness of Allah. These entries explore reflections, proofs, and revelations centered upon knowing the Creator without partners. Contemplating Tawhid grounds the believer's heart in undivided devotion and serene purpose."
+    "nameBn": "তাওহিদ (আল্লাহর একত্ববাদ)",
+    "description": "The foundational pillar of Islamic belief, affirming the absolute oneness, sovereignty, and uniqueness of Allah. These entries explore reflections, proofs, and revelations centered upon knowing the Creator without partners. Contemplating Tawhid grounds the believer's heart in undivided devotion and serene purpose.",
+    "descriptionBn": "ইসলামী বিশ্বাসের মূল ভিত্তি—আল্লাহর একত্ব, সার্বভৌমত্ব ও অতুলনীয় ক্ষমতার দ্বিধাহীন স্বীকৃতি। এই সংকলনে শিরকমুক্ত নিখাদ তাওহিদ এবং রবের পরিচয় সংক্রান্ত আয়াত ও ভাবনা সন্নিবেশিত হয়েছে।"
   },
   "sabr": {
     "name": "Sabr (Patience & Fortitude)",
-    "description": "The steadfast endurance of tribulations, restraining the self from despair, and remaining persistent upon righteousness. Throughout revelation and prophetic lives, Sabr is depicted as a luminous shield and a companion to divine aid. These passages remind the traveler of the enduring rewards awaiting those who persevered with dignified hope."
+    "nameBn": "সবর (ধৈর্য ও অবিচলতা)",
+    "description": "The steadfast endurance of tribulations, restraining the self from despair, and remaining persistent upon righteousness. Throughout revelation and prophetic lives, Sabr is depicted as a luminous shield and a companion to divine aid. These passages remind the traveler of the enduring rewards awaiting those who persevered with dignified hope.",
+    "descriptionBn": "বিপদে অবিচল থাকা, আত্মসংযম এবং সত্যের পথে নিরবচ্ছিন্ন দৃঢ়তা। কুরআনে সবরকে বিশ্বাসীর জন্য এক আলোকবর্তিকা ও আল্লাহর নৈকট্য লাভের অন্যতম সেরা মাধ্যম হিসেবে তুলে ধরা হয়েছে।"
   },
   "shukr": {
     "name": "Shukr (Gratitude)",
-    "description": "Recognizing divine bounties with the heart, acknowledging them with the tongue, and expressing them through upright action. Gratitude unlocks inner tranquility and invites abundance in faith and life. Reflect on these ayat, traditions, and accounts that cultivate a posture of perpetual thankfulness."
+    "nameBn": "শুকর (কৃতজ্ঞতা)",
+    "description": "Recognizing divine bounties with the heart, acknowledging them with the tongue, and expressing them through upright action. Gratitude unlocks inner tranquility and invites abundance in faith and life. Reflect on these ayat, traditions, and accounts that cultivate a posture of perpetual thankfulness.",
+    "descriptionBn": "আল্লাহর প্রতিটি অনুগ্রহকে অন্তরে উপলব্ধি করা এবং মুখে ও সৎকাজে তার শুকরিয়া প্রকাশ করা। কৃতজ্ঞতা অন্তরে পরম প্রশান্তি আনে এবং নিয়ামতের সমৃদ্ধি ঘটায়।"
   },
   "tawakkul": {
     "name": "Tawakkul (Reliance on Allah)",
-    "description": "Entrusting one's affairs entirely to Allah while taking all necessary, wise worldly means. It transforms anxiety into calm conviction and weakness into reliance on the Almighty. These entries showcase how the prophets, companions, and pious forebears lived with unwavering trust in divine wisdom."
+    "nameBn": "তাওয়াক্কুল (আল্লাহর ওপর নির্ভরতা)",
+    "description": "Entrusting one's affairs entirely to Allah while taking all necessary, wise worldly means. It transforms anxiety into calm conviction and weakness into reliance on the Almighty. These entries showcase how the prophets, companions, and pious forebears lived with unwavering trust in divine wisdom.",
+    "descriptionBn": "উপযুক্ত চেষ্টা ও সঠিক মাধ্যম গ্রহণের পর ফলাফলের জন্য একমাত্র আল্লাহর ওপর পূর্ণ আস্থা রাখা। এটি জীবনের যাবতীয় মানসিক উদ্বেগ দূর করে শান্ত প্রত্যয় দান করে।"
   },
   "dua": {
     "name": "Dua (Supplication)",
-    "description": "The intimate conversation between a humble servant and the All-Hearing Sustainer of the worlds. Supplication is the essence of worship, turning helplessness into divine connection and heartfelt hope. Explore foundational prophetic prayers and Quranic invocations to enrich your daily remembrance."
+    "nameBn": "দুআ (প্রার্থনা)",
+    "description": "The intimate conversation between a humble servant and the All-Hearing Sustainer of the worlds. Supplication is the essence of worship, turning helplessness into divine connection and heartfelt hope. Explore foundational prophetic prayers and Quranic invocations to enrich your daily remembrance.",
+    "descriptionBn": "বিনম্র বান্দা ও সর্বশ্রোতা রবের মধ্যকার নিভৃত কথপোকথন। দুআই হলো ইবাদতের মূল নির্যাস, যা মানুষের অসহায়ত্বকে পরিণত করে ঐশী শক্তির সাথে দৃঢ় বন্ধনে।"
   },
   "dhikr": {
     "name": "Dhikr (Remembrance)",
-    "description": "The continuous remembrance of Allah that revives weary hearts and polishes the soul from heedlessness. It is the lightest act upon the tongue yet the weightiest on the scales of eternity. Immerse in these reflections and narrations on the tranquility found in remembering the Most Merciful."
+    "nameBn": "জিকির (আল্লাহর স্মরণ)",
+    "description": "The continuous remembrance of Allah that revives weary hearts and polishes the soul from heedlessness. It is the lightest act upon the tongue yet the weightiest on the scales of eternity. Immerse in these reflections and narrations on the tranquility found in remembering the Most Merciful.",
+    "descriptionBn": "আল্লাহর সার্বক্ষণিক স্মরণ, যা ক্লান্ত অন্তরকে পুনরুজ্জীবিত করে এবং আত্মাকে গাফলতি থেকে মুক্ত করে। জিহ্বায় উচ্চারণ করা সবচেয়ে সহজ কিন্তু কিয়ামতের পাল্লায় সবচেয়ে ভারী।"
   },
   "quran": {
     "name": "The Noble Quran",
-    "description": "The eternal, miraculous speech of Allah revealed as an infallible beacon, guidance, and spiritual healing for mankind. Engaging with its verses illuminates the human journey through deep reflection and reverent obedience. These entries gather contemplative ayat and wisdom regarding the Quran's transformative power."
+    "nameBn": "আল-কুরআন",
+    "description": "The eternal, miraculous speech of Allah revealed as an infallible beacon, guidance, and spiritual healing for mankind. Engaging with its verses illuminates the human journey through deep reflection and reverent obedience. These entries gather contemplative ayat and wisdom regarding the Quran's transformative power.",
+    "descriptionBn": "মানবজাতির জন্য অবতীর্ণ চিরন্তন মুজিজা, আলোকবর্তিকা ও অন্তরের আরোগ্য। কুরআনের প্রতিটি আয়াতের গভীর অনুধ্যান মানুষের আত্মিক জীবনকে বদলে দেয়।"
   },
   "hijrah": {
     "name": "The Hijrah (Migration)",
-    "description": "The historic migration of the Prophet ﷺ and his devoted companions from Mecca to Medina, marking a monumental turning point in human history. It symbolizes leaving spiritual stagnation and harm for sacred conviction and collective brotherhood. Here we trace key historical dates and enduring lessons from this epochal voyage."
+    "nameBn": "হিজরত (ঐতিহাসিক প্রস্থান)",
+    "description": "The historic migration of the Prophet ﷺ and his devoted companions from Mecca to Medina, marking a monumental turning point in human history. It symbolizes leaving spiritual stagnation and harm for sacred conviction and collective brotherhood. Here we trace key historical dates and enduring lessons from this epochal voyage.",
+    "descriptionBn": "মক্কা থেকে মদিনায় রাসূলুল্লাহ ﷺ ও সাহাবিদের ঐতিহাসিক প্রস্থান, যা ইসলামের ইতিহাসের এক যুগান্তকারী মোড় উন্মোচন করেছিল।"
   },
   "akhlaq": {
     "name": "Akhlaq (Character & Conduct)",
-    "description": "Noble moral character, humility, integrity, and gracious conduct exemplified by the Messenger of Allah ﷺ. True spirituality manifests in gentle speech, trustworthiness, and treating creation with dignity. These records illuminate timeless standards of virtue and interpersonal beauty."
+    "nameBn": "আখলাক (উত্তম চরিত্র ও শিষ্টাচার)",
+    "description": "Noble moral character, humility, integrity, and gracious conduct exemplified by the Messenger of Allah ﷺ. True spirituality manifests in gentle speech, trustworthiness, and treating creation with dignity. These records illuminate timeless standards of virtue and interpersonal beauty.",
+    "descriptionBn": "নম্রতা, সততা ও সুন্দরতম সদাচরণের সমষ্টি, যা রাসূলুল্লাহ ﷺ নিজের চরিত্রে সর্বোত্তম রূপে বাস্তবায়ন করে দেখিয়েছেন।"
   },
   "compassion": {
     "name": "Rahmah (Compassion & Mercy)",
-    "description": "The boundless mercy of the Creator encompassing all things, reflected through human kindness and tenderness toward all living beings. The believer is commanded to show mercy on earth so the One in the heavens shows mercy unto them. Discover verses and narrations celebrating the transformative warmth of divine and human compassion."
+    "nameBn": "রহমত ও দয়া",
+    "description": "The boundless mercy of the Creator encompassing all things, reflected through human kindness and tenderness toward all living beings. The believer is commanded to show mercy on earth so the One in the heavens shows mercy unto them. Discover verses and narrations celebrating the transformative warmth of divine and human compassion.",
+    "descriptionBn": "সৃষ্টির প্রতি সহমর্মিতা ও স্রষ্টার অপার করুণা। জমিনবাসীদের প্রতি দয়া প্রদর্শনকারীর ওপর আসমানবাসী দয়া করেন।"
   },
   "hereafter": {
     "name": "The Hereafter (Al-Akhirah)",
-    "description": "Reminders of the eternal home, the transient nature of this worldly journey, and the ultimate meeting with the Lord of the worlds. Realizing life's brevity inspires purposeful action, sincere repentance, and enduring hope in divine forgiveness. These writings and verses anchor our priorities in the timeless horizon."
+    "nameBn": "আখেরাত (পরকাল)",
+    "description": "Reminders of the eternal home, the transient nature of this worldly journey, and the ultimate meeting with the Lord of the worlds. Realizing life's brevity inspires purposeful action, sincere repentance, and enduring hope in divine forgiveness. These writings and verses anchor our priorities in the timeless horizon.",
+    "descriptionBn": "অনন্ত জীবনের স্মরণ, পার্থিব জীবনের ক্ষণস্থায়িত্ব এবং রবের সাথে চূড়ান্ত সাক্ষাতের প্রস্তুতি।"
   },
   "sahaba-stories": {
     "name": "Companions of the Prophet",
-    "description": "Vivid moments from the golden generation who received the light of revelation directly and sacrificed everything to preserve it. Their unwavering loyalty, courage, and scholarly devotion remain timeless inspirations for every traveler. Discover intimate scenes and historic actions from the lives of the noble Sahaba."
+    "nameBn": "সাহাবিদের উপাখ্যান",
+    "description": "Vivid moments from the golden generation who received the light of revelation directly and sacrificed everything to preserve it. Their unwavering loyalty, courage, and scholarly devotion remain timeless inspirations for every traveler. Discover intimate scenes and historic actions from the lives of the noble Sahaba.",
+    "descriptionBn": "সেই সোনালী প্রজন্মের জীবন্ত মুহূর্ত, যারা সরাসরি নবুওয়তের আলোতে আলোকিত হয়েছিলেন এবং ইসলামকে সংরক্ষণ করতে নিজেদের জীবন উৎসর্গ করেছিলেন।"
   }
 }

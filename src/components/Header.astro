@@ -1,23 +1,30 @@
 ---
 import Logo from './Logo.astro';
 import ThemeToggle from './ThemeToggle.astro';
-import { SITE_CONFIG } from '../config';
+import LanguagePicker from './LanguagePicker.astro';
+import { getLangFromUrl, useTranslations, getLocalizedPath, stripLocaleFromPath } from '../i18n/utils';
 
-const pathname = new URL(Astro.request.url).pathname;
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const pathname = Astro.url.pathname;
+const cleanPath = stripLocaleFromPath(pathname);
 
 const navLinks = [
-  { href: '/ayat', label: 'Ayat' },
-  { href: '/hadith', label: 'Hadith' },
-  { href: '/events', label: 'Events' },
-  { href: '/sahaba', label: 'Sahaba' },
-  { href: '/writings', label: 'Writings' },
-  { href: '/tags', label: 'Tags' },
-  { href: '/about', label: 'About' },
+  { href: getLocalizedPath('/ayat', lang), raw: '/ayat', label: t('nav.ayat') },
+  { href: getLocalizedPath('/hadith', lang), raw: '/hadith', label: t('nav.hadith') },
+  { href: getLocalizedPath('/events', lang), raw: '/events', label: t('nav.events') },
+  { href: getLocalizedPath('/sahaba', lang), raw: '/sahaba', label: t('nav.sahaba') },
+  { href: getLocalizedPath('/writings', lang), raw: '/writings', label: t('nav.writings') },
+  { href: getLocalizedPath('/tags', lang), raw: '/tags', label: t('nav.tags') },
+  { href: getLocalizedPath('/about', lang), raw: '/about', label: t('nav.about') },
 ];
 
-const isLinkActive = (href: string) => {
-  if (href === '/' && pathname === '/') return true;
-  if (href !== '/' && pathname.startsWith(href)) return true;
+const homeHref = getLocalizedPath('/', lang);
+const searchHref = getLocalizedPath('/search', lang);
+
+const isLinkActive = (raw: string) => {
+  if (raw === '/' && cleanPath === '/') return true;
+  if (raw !== '/' && cleanPath.startsWith(raw)) return true;
   return false;
 };
 ---
@@ -30,7 +37,7 @@ const isLinkActive = (href: string) => {
     <!-- Desktop Nav Links -->
     <nav class="hidden lg:flex items-center gap-1 font-medium text-sm" aria-label="Main navigation">
       {navLinks.map((link) => {
-        const active = isLinkActive(link.href);
+        const active = isLinkActive(link.raw);
         return (
           <a
             href={link.href}
@@ -47,16 +54,19 @@ const isLinkActive = (href: string) => {
       })}
     </nav>
 
-    <!-- Header Actions: Search, Theme Toggle, Mobile Hamburger -->
+    <!-- Header Actions: Language Switcher, Search, Theme Toggle, Mobile Hamburger -->
     <div class="flex items-center gap-2">
+      <!-- Language Switcher -->
+      <LanguagePicker />
+
       <!-- Search Link Button -->
       <a
-        href="/search"
+        href={searchHref}
         class={`p-2 rounded-lg text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--accent-gold)] ${
-          pathname === '/search' ? 'text-[var(--accent-gold)] bg-[var(--accent-gold-subtle)]' : ''
+          cleanPath === '/search' ? 'text-[var(--accent-gold)] bg-[var(--accent-gold-subtle)]' : ''
         }`}
-        aria-label="Search all collections"
-        title="Search entries (Pagefind)"
+        aria-label={t('nav.search')}
+        title={t('search.title')}
       >
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
@@ -92,17 +102,17 @@ const isLinkActive = (href: string) => {
   >
     <nav class="flex flex-col gap-1" aria-label="Mobile navigation">
       <a
-        href="/"
+        href={homeHref}
         class={`px-3 py-2.5 rounded-lg text-base font-medium transition-colors ${
-          pathname === '/'
+          cleanPath === '/'
             ? 'text-[var(--accent-gold)] bg-[var(--accent-gold-subtle)] font-semibold'
             : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-subtle)]'
         }`}
       >
-        Home
+        {t('nav.home')}
       </a>
       {navLinks.map((link) => {
-        const active = isLinkActive(link.href);
+        const active = isLinkActive(link.raw);
         return (
           <a
             href={link.href}
@@ -118,9 +128,9 @@ const isLinkActive = (href: string) => {
         );
       })}
       <a
-        href="/search"
+        href={searchHref}
         class={`px-3 py-2.5 rounded-lg text-base font-medium flex items-center gap-2 transition-colors ${
-          pathname === '/search'
+          cleanPath === '/search'
             ? 'text-[var(--accent-gold)] bg-[var(--accent-gold-subtle)] font-semibold'
             : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-subtle)]'
         }`}
@@ -128,7 +138,7 @@ const isLinkActive = (href: string) => {
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
         </svg>
-        Search Musafir
+        {t('nav.search')}
       </a>
     </nav>
   </div>
@@ -153,7 +163,6 @@ const isLinkActive = (href: string) => {
       }
     });
 
-    // Close when clicking outside
     document.addEventListener('click', (e) => {
       if (!btn.contains(e.target) && !menu.contains(e.target) && !menu.classList.contains('hidden')) {
         menu.classList.add('hidden');
