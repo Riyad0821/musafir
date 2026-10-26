@@ -117,12 +117,12 @@ const description = lang === 'bn' ? (tagInfo.descriptionBn || tagInfo.descriptio
     {matchingAyat.length > 0 && (
       <section aria-labelledby="ayat-group-heading">
         <div class="flex items-center justify-between border-b border-[var(--border-subtle)] pb-3 mb-6">
-          <h2 id="ayat-group-heading" class="font-serif text-2xl font-bold text-[var(--text-primary)] flex items-center gap-2">
-            <span>📖</span>
+          <h2 id="ayat-group-heading" class="font-serif text-2xl font-bold text-[var(--text-primary)] flex items-center gap-2.5">
+            <span class="w-2 h-2 rounded-full bg-[var(--primary-accent)]"></span>
             <span>{t('collections.ayat.label')}</span>
             <span class="text-sm font-normal text-[var(--text-muted)]">({matchingAyat.length})</span>
           </h2>
-          <a href={getLocalizedPath('/ayat', lang)} class="text-xs text-[var(--accent-gold)] hover:underline">
+          <a href={getLocalizedPath('/ayat', lang)} class="text-xs text-[var(--primary-accent)] dark:text-[var(--accent-gold)] hover:underline">
             {lang === 'bn' ? 'সবগুলো আয়াত দেখুন →' : 'View all Ayat →'}
           </a>
         </div>
@@ -137,12 +137,12 @@ const description = lang === 'bn' ? (tagInfo.descriptionBn || tagInfo.descriptio
     {matchingHadith.length > 0 && (
       <section aria-labelledby="hadith-group-heading">
         <div class="flex items-center justify-between border-b border-[var(--border-subtle)] pb-3 mb-6">
-          <h2 id="hadith-group-heading" class="font-serif text-2xl font-bold text-[var(--text-primary)] flex items-center gap-2">
-            <span>✨</span>
+          <h2 id="hadith-group-heading" class="font-serif text-2xl font-bold text-[var(--text-primary)] flex items-center gap-2.5">
+            <span class="w-2 h-2 rounded-full bg-[var(--accent-gold)]"></span>
             <span>{t('collections.hadith.label')}</span>
             <span class="text-sm font-normal text-[var(--text-muted)]">({matchingHadith.length})</span>
           </h2>
-          <a href={getLocalizedPath('/hadith', lang)} class="text-xs text-[var(--accent-gold)] hover:underline">
+          <a href={getLocalizedPath('/hadith', lang)} class="text-xs text-[var(--primary-accent)] dark:text-[var(--accent-gold)] hover:underline">
             {lang === 'bn' ? 'সবগুলো হাদিস দেখুন →' : 'View all Hadith →'}
           </a>
         </div>
@@ -157,12 +157,12 @@ const description = lang === 'bn' ? (tagInfo.descriptionBn || tagInfo.descriptio
     {matchingEvents.length > 0 && (
       <section aria-labelledby="events-group-heading">
         <div class="flex items-center justify-between border-b border-[var(--border-subtle)] pb-3 mb-6">
-          <h2 id="events-group-heading" class="font-serif text-2xl font-bold text-[var(--text-primary)] flex items-center gap-2">
-            <span>🗓️</span>
+          <h2 id="events-group-heading" class="font-serif text-2xl font-bold text-[var(--text-primary)] flex items-center gap-2.5">
+            <span class="w-2 h-2 rounded-full bg-[#5B6358]"></span>
             <span>{t('collections.events.label')}</span>
             <span class="text-sm font-normal text-[var(--text-muted)]">({matchingEvents.length})</span>
           </h2>
-          <a href={getLocalizedPath('/events', lang)} class="text-xs text-[var(--accent-gold)] hover:underline">
+          <a href={getLocalizedPath('/events', lang)} class="text-xs text-[var(--primary-accent)] dark:text-[var(--accent-gold)] hover:underline">
             {lang === 'bn' ? 'সবগুলো ঘটনা দেখুন →' : 'View all Events →'}
           </a>
         </div>
@@ -177,12 +177,12 @@ const description = lang === 'bn' ? (tagInfo.descriptionBn || tagInfo.descriptio
     {matchingSahaba.length > 0 && (
       <section aria-labelledby="sahaba-group-heading">
         <div class="flex items-center justify-between border-b border-[var(--border-subtle)] pb-3 mb-6">
-          <h2 id="sahaba-group-heading" class="font-serif text-2xl font-bold text-[var(--text-primary)] flex items-center gap-2">
-            <span>👥</span>
+          <h2 id="sahaba-group-heading" class="font-serif text-2xl font-bold text-[var(--text-primary)] flex items-center gap-2.5">
+            <span class="w-2 h-2 rounded-full bg-[#436450]"></span>
             <span>{t('collections.sahaba.label')}</span>
             <span class="text-sm font-normal text-[var(--text-muted)]">({matchingSahaba.length})</span>
           </h2>
-          <a href={getLocalizedPath('/sahaba', lang)} class="text-xs text-[var(--accent-gold)] hover:underline">
+          <a href={getLocalizedPath('/sahaba', lang)} class="text-xs text-[var(--primary-accent)] dark:text-[var(--accent-gold)] hover:underline">
             {lang === 'bn' ? 'সাহাবিদের সকল জীবনী দেখুন →' : 'View all Sahaba →'}
           </a>
         </div>
@@ -197,12 +197,12 @@ const description = lang === 'bn' ? (tagInfo.descriptionBn || tagInfo.descriptio
     {matchingWritings.length > 0 && (
       <section aria-labelledby="writings-group-heading">
         <div class="flex items-center justify-between border-b border-[var(--border-subtle)] pb-3 mb-6">
-          <h2 id="writings-group-heading" class="font-serif text-2xl font-bold text-[var(--text-primary)] flex items-center gap-2">
-            <span>✍️</span>
+          <h2 id="writings-group-heading" class="font-serif text-2xl font-bold text-[var(--text-primary)] flex items-center gap-2.5">
+            <span class="w-2 h-2 rounded-full bg-[#7A5B3D]"></span>
             <span>{t('collections.writings.label')}</span>
             <span class="text-sm font-normal text-[var(--text-muted)]">({matchingWritings.length})</span>
           </h2>
-          <a href={getLocalizedPath('/writings', lang)} class="text-xs text-[var(--accent-gold)] hover:underline">
+          <a href={getLocalizedPath('/writings', lang)} class="text-xs text-[var(--primary-accent)] dark:text-[var(--accent-gold)] hover:underline">
             {lang === 'bn' ? 'সকল লেখা দেখুন →' : 'View all Writings →'}
           </a>
         </div>

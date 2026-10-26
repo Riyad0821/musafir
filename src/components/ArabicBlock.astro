@@ -1,4 +1,6 @@
 ---
+import GeometricPattern from './GeometricPattern.astro';
+
 export interface Props {
   text?: string;
   sourceLabel?: string;
@@ -16,31 +18,34 @@ const {
 const sizeClasses = {
   normal: 'text-2xl md:text-3xl leading-[2.2]',
   large: 'text-3xl md:text-4xl leading-[2.3]',
-  featured: 'text-3xl md:text-5xl leading-[2.4]',
+  featured: 'text-3xl sm:text-4xl md:text-5xl leading-[2.4]',
 }[size];
 ---
 
-<div class={`relative my-6 p-6 md:p-8 rounded-2xl bg-[var(--bg-subtle)]/50 border border-[var(--border-subtle)] transition-colors ${className}`}>
-  <!-- Subtle decorative Islamic motif icon in background corner -->
-  <div class="absolute top-3 left-3 text-[var(--accent-gold)] opacity-15 pointer-events-none select-none" aria-hidden="true">
-    <svg class="w-10 h-10" viewBox="0 0 40 40" fill="currentColor">
-      <path d="M20 0L24 16L40 20L24 24L20 40L16 24L0 20L16 16L20 0Z" />
-    </svg>
+<div class={`relative my-6 p-6 sm:p-8 md:p-10 rounded-2xl bg-[var(--bg-subtle)]/45 border border-[var(--border-subtle)] shadow-[var(--card-shadow)] transition-colors overflow-hidden ${className}`}>
+  <!-- Subtle decorative Islamic corner motifs -->
+  <div class="absolute top-2 left-2 pointer-events-none select-none">
+    <GeometricPattern variant="corner" class="opacity-25" />
+  </div>
+  <div class="absolute bottom-2 right-2 pointer-events-none select-none rotate-180">
+    <GeometricPattern variant="corner" class="opacity-25" />
   </div>
 
   <!-- Arabic text container with explicit RTL and lang="ar" -->
   <blockquote
     dir="rtl"
     lang="ar"
-    class={`arabic-text ${sizeClasses} text-[var(--text-primary)] font-normal text-right overflow-visible tracking-normal selection:bg-[var(--accent-gold-subtle)]`}
+    class={`arabic-text ${sizeClasses} text-[var(--text-primary)] font-normal text-right overflow-visible tracking-normal selection:bg-[var(--accent-gold-subtle)] selection:text-[var(--accent-gold)]`}
   >
     {text ? text : <slot />}
   </blockquote>
 
   {sourceLabel && (
-    <div class="mt-4 pt-3 border-t border-[var(--border-subtle)]/60 flex items-center justify-between text-xs text-[var(--text-muted)]">
-      <span class="font-serif italic">{sourceLabel}</span>
-      <span class="text-[10px] tracking-wider uppercase font-semibold text-[var(--accent-gold)]">Original Text</span>
+    <div class="mt-6 pt-4 border-t border-[var(--border-subtle)]/70 flex items-center justify-between text-xs text-[var(--text-muted)]">
+      <span class="font-serif italic text-sm">{sourceLabel}</span>
+      <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] tracking-wider uppercase font-semibold bg-[var(--accent-gold-subtle)] text-[var(--accent-gold)] border border-[var(--accent-gold)]/30">
+        النَّصُّ الأَصْلِيُّ • Original Script
+      </span>
     </div>
   )}
 </div>

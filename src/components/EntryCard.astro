@@ -1,5 +1,6 @@
 ---
 import TagList from './TagList.astro';
+import GeometricPattern from './GeometricPattern.astro';
 import { getLangFromUrl, getLocalizedPath, useTranslations } from '../i18n/utils';
 
 export interface Props {
@@ -50,15 +51,36 @@ if (collection === 'ayat') {
   referenceOrSource = data.originalSource || '';
 }
 
+// Harmonious editorial badges adhering to the botanical/gold design system
 const collectionLabels: Record<string, { en: string; bn: string; badgeClass: string }> = {
-  ayat: { en: 'Ayah', bn: 'আয়াত', badgeClass: 'bg-emerald-50 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800' },
-  hadith: { en: 'Hadith', bn: 'হাদিস', badgeClass: 'bg-amber-50 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 border-amber-200 dark:border-amber-800' },
-  events: { en: 'Event', bn: 'ঘটনা', badgeClass: 'bg-sky-50 text-sky-800 dark:bg-sky-950/60 dark:text-sky-300 border-sky-200 dark:border-sky-800' },
-  sahaba: { en: 'Sahaba', bn: 'সাহাবা', badgeClass: 'bg-indigo-50 text-indigo-800 dark:bg-indigo-950/60 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800' },
-  writings: { en: 'Writing', bn: 'লেখা', badgeClass: 'bg-rose-50 text-rose-800 dark:bg-rose-950/60 dark:text-rose-300 border-rose-200 dark:border-rose-800' },
+  ayat: {
+    en: 'Ayah',
+    bn: 'আয়াত',
+    badgeClass: 'bg-[var(--primary-accent)]/10 text-[var(--primary-accent)] dark:text-[#88B399] border-[var(--primary-accent)]/20',
+  },
+  hadith: {
+    en: 'Hadith',
+    bn: 'হাদিস',
+    badgeClass: 'bg-[var(--accent-gold)]/10 text-[var(--accent-gold)] dark:text-[#CBB27A] border-[var(--accent-gold)]/25',
+  },
+  sahaba: {
+    en: 'Sahaba',
+    bn: 'সাহাবা',
+    badgeClass: 'bg-[#436450]/10 text-[#436450] dark:text-[#90BAA0] border-[#436450]/20',
+  },
+  events: {
+    en: 'Event',
+    bn: 'ঘটনা',
+    badgeClass: 'bg-[#5B6358]/10 text-[#5B6358] dark:text-[#A7B3A3] border-[#5B6358]/20',
+  },
+  writings: {
+    en: 'Writing',
+    bn: 'লেখা',
+    badgeClass: 'bg-[#7A5B3D]/10 text-[#7A5B3D] dark:text-[#CBB295] border-[#7A5B3D]/20',
+  },
 };
 
-const badgeInfo = collectionLabels[collection] || { en: collection, bn: collection, badgeClass: 'bg-stone-100 text-stone-800' };
+const badgeInfo = collectionLabels[collection] || { en: collection, bn: collection, badgeClass: 'bg-[var(--bg-subtle)] text-[var(--text-secondary)] border-[var(--border-subtle)]' };
 const badgeLabel = lang === 'bn' ? badgeInfo.bn : badgeInfo.en;
 const url = getLocalizedPath(`/${collection}/${slug}`, lang);
 const formattedDate = data.dateAdded ? new Date(data.dateAdded).toLocaleDateString(lang === 'bn' ? 'bn-BD' : lang === 'en-gb' ? 'en-GB' : 'en-US', {
@@ -68,56 +90,63 @@ const formattedDate = data.dateAdded ? new Date(data.dateAdded).toLocaleDateStri
 }) : '';
 ---
 
-<article class={`group relative flex flex-col justify-between p-6 sm:p-7 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] hover:border-[var(--accent-gold)]/60 transition-all duration-300 shadow-[var(--card-shadow)] hover:shadow-lg ${
-  featured ? 'ring-1 ring-[var(--accent-gold)]/40 bg-[var(--accent-gold-subtle)]/20' : ''
+<article class={`group relative flex flex-col justify-between p-6 sm:p-7 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] hover:border-[var(--accent-gold)]/50 transition-all duration-300 shadow-[var(--card-shadow)] hover:shadow-[var(--card-shadow-hover)] hover:-translate-y-0.5 ${
+  featured ? 'ring-1 ring-[var(--accent-gold)]/35 bg-gradient-to-b from-[var(--accent-gold-subtle)]/25 to-[var(--bg-surface)]' : ''
 }`}>
+  <!-- Decorative corner motif on featured card -->
+  {featured && (
+    <div class="absolute top-2 right-2 pointer-events-none select-none">
+      <GeometricPattern variant="corner" class="rotate-90" />
+    </div>
+  )}
+
   <div>
     <!-- Top Metadata Bar -->
-    <div class="flex items-center justify-between gap-2 mb-3 text-xs">
+    <div class="flex items-center justify-between gap-2 mb-3.5 text-xs">
       <div class="flex items-center gap-2 flex-wrap">
-        <span class={`inline-flex items-center px-2 py-0.5 rounded-md font-medium text-[11px] border ${badgeInfo.badgeClass}`}>
+        <span class={`inline-flex items-center px-2.5 py-0.5 rounded-full font-medium text-[11px] border tracking-wide ${badgeInfo.badgeClass}`}>
           {badgeLabel}
         </span>
         {data.featured && (
-          <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-medium bg-[var(--accent-gold-subtle)] text-[var(--accent-gold)] border border-[var(--accent-gold)]/30">
-            {t('featured.badge')}
+          <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-[var(--accent-gold-subtle)] text-[var(--accent-gold)] border border-[var(--accent-gold)]/30">
+            ★ {t('featured.badge')}
           </span>
         )}
       </div>
       {formattedDate && (
-        <time datetime={data.dateAdded?.toISOString?.()} class="text-[var(--text-muted)] text-[11px]">
+        <time datetime={data.dateAdded?.toISOString?.()} class="text-[var(--text-muted)] text-[11px] font-sans">
           {formattedDate}
         </time>
       )}
     </div>
 
-    <!-- Title -->
-    <h3 class="font-serif font-semibold text-lg sm:text-xl text-[var(--text-primary)] group-hover:text-[var(--accent-gold)] transition-colors leading-snug mb-1">
-      <a href={url} class="focus:outline-none">
+    <!-- Title with link -->
+    <h3 class="font-serif font-semibold text-lg sm:text-xl text-[var(--text-primary)] group-hover:text-[var(--primary-accent)] dark:group-hover:text-[var(--accent-gold)] transition-colors leading-snug mb-1.5">
+      <a href={url} class="focus:outline-none focus-visible:underline">
         <span class="absolute inset-0" aria-hidden="true"></span>
         {title}
       </a>
     </h3>
 
-    <!-- Subtitle / Meta -->
+    <!-- Subtitle / Meta Context -->
     {subtitle && (
       <p class="text-xs text-[var(--text-muted)] mb-3 font-medium">
         {subtitle}
       </p>
     )}
 
-    <!-- Arabic preview if present -->
+    <!-- Arabic preview with genuine RTL rendering -->
     {arabicPreview && (
       <div
         dir="rtl"
         lang="ar"
-        class="arabic-text text-base sm:text-lg text-[var(--text-primary)]/90 my-3 p-3 rounded-lg bg-[var(--bg-subtle)]/60 line-clamp-2"
+        class="arabic-text text-base sm:text-lg text-[var(--text-primary)]/90 my-3.5 p-3.5 rounded-xl bg-[var(--bg-subtle)]/50 border border-[var(--border-subtle)]/60 line-clamp-2 leading-[2.1]"
       >
         {arabicPreview}
       </div>
     )}
 
-    <!-- Excerpt / Summary -->
+    <!-- Excerpt / Reflection Summary -->
     {excerpt && (
       <p class="text-sm text-[var(--text-secondary)] leading-relaxed line-clamp-3 mb-4">
         {excerpt}
@@ -126,10 +155,10 @@ const formattedDate = data.dateAdded ? new Date(data.dateAdded).toLocaleDateStri
   </div>
 
   <!-- Bottom Details: Reference & Tags -->
-  <div class="pt-4 mt-auto border-t border-[var(--border-subtle)] flex flex-col gap-2.5">
+  <div class="pt-4 mt-auto border-t border-[var(--border-subtle)]/75 flex flex-col gap-2.5">
     {referenceOrSource && (
       <div class="flex items-center gap-1.5 text-xs text-[var(--text-muted)] truncate">
-        <svg class="w-3.5 h-3.5 flex-shrink-0 text-[var(--accent-gold)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="w-3.5 h-3.5 flex-shrink-0 text-[var(--accent-gold)] opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
         </svg>
         <span class="truncate">{referenceOrSource}</span>
@@ -137,7 +166,7 @@ const formattedDate = data.dateAdded ? new Date(data.dateAdded).toLocaleDateStri
     )}
 
     {data.tags && data.tags.length > 0 && (
-      <div class="relative z-10">
+      <div class="relative z-10 pt-0.5">
         <TagList tags={data.tags.slice(0, 3)} size="sm" />
       </div>
     )}

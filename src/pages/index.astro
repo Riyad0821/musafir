@@ -1,8 +1,8 @@
 ---
 import Layout from '../components/Layout.astro';
 import EntryCard from '../components/EntryCard.astro';
+import GeometricPattern from '../components/GeometricPattern.astro';
 import { getCollection } from 'astro:content';
-import { SITE_CONFIG } from '../config';
 import { getLangFromUrl, useTranslations, getLocalizedPath } from '../i18n/utils';
 
 const lang = getLangFromUrl(Astro.url);
@@ -30,12 +30,53 @@ allEntries.sort((a, b) => new Date(b.data.dateAdded).getTime() - new Date(a.data
 const featuredEntry = allEntries.find((e) => e.data.featured) || allEntries[0];
 const latestEntries = allEntries.slice(0, 6);
 
+// Bespoke, delicate SVG vectors for the 5 collections adhering to the botanical/gold aesthetic
 const collectionStats = [
-  { id: 'ayat', label: t('collections.ayat.label'), count: ayat.length, href: getLocalizedPath('/ayat', lang), desc: t('collections.ayat.desc'), icon: '📖' },
-  { id: 'hadith', label: t('collections.hadith.label'), count: hadith.length, href: getLocalizedPath('/hadith', lang), desc: t('collections.hadith.desc'), icon: '✨' },
-  { id: 'events', label: t('collections.events.label'), count: events.length, href: getLocalizedPath('/events', lang), desc: t('collections.events.desc'), icon: '🗓️' },
-  { id: 'sahaba', label: t('collections.sahaba.label'), count: sahaba.length, href: getLocalizedPath('/sahaba', lang), desc: t('collections.sahaba.desc'), icon: '👥' },
-  { id: 'writings', label: t('collections.writings.label'), count: writings.length, href: getLocalizedPath('/writings', lang), desc: t('collections.writings.desc'), icon: '✍️' },
+  {
+    id: 'ayat',
+    label: t('collections.ayat.label'),
+    count: ayat.length,
+    href: getLocalizedPath('/ayat', lang),
+    desc: t('collections.ayat.desc'),
+    // Open Quran Manuscript Icon
+    iconSvg: `<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 6.5C10.5 5 8 4.5 4 4.5V18.5C8 18.5 10.5 19 12 20.5M12 6.5C13.5 5 16 4.5 20 4.5V18.5C16 18.5 13.5 19 12 20.5M12 6.5V20.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  },
+  {
+    id: 'hadith',
+    label: t('collections.hadith.label'),
+    count: hadith.length,
+    href: getLocalizedPath('/hadith', lang),
+    desc: t('collections.hadith.desc'),
+    // Prophetic Tradition Scroll & Seal
+    iconSvg: `<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 4H18C19.1046 4 20 4.89543 20 6V18C20 19.1046 19.1046 20 18 20H6C4.89543 20 4 19.1046 4 18V7C4 5.34315 5.34315 4 7 4H8ZM8 4V16C8 17.1046 7.10457 18 6 18" stroke-linecap="round" stroke-linejoin="round"/><path d="M11 8H16M11 12H15" stroke-linecap="round"/></svg>`,
+  },
+  {
+    id: 'sahaba',
+    label: t('collections.sahaba.label'),
+    count: sahaba.length,
+    href: getLocalizedPath('/sahaba', lang),
+    desc: t('collections.sahaba.desc'),
+    // Guiding Stars & Lantern of Faith
+    iconSvg: `<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3V6M12 18V21M9 6H15L16 12L15 18H9L8 12L9 6Z" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="2" fill="currentColor"/></svg>`,
+  },
+  {
+    id: 'events',
+    label: t('collections.events.label'),
+    count: events.length,
+    href: getLocalizedPath('/events', lang),
+    desc: t('collections.events.desc'),
+    // Celestial Milestone / Astrolabe Calendar
+    iconSvg: `<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M12 7V12L15 15" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 3V5M21 12H19M12 21V19M3 12H5" stroke-linecap="round"/></svg>`,
+  },
+  {
+    id: 'writings',
+    label: t('collections.writings.label'),
+    count: writings.length,
+    href: getLocalizedPath('/writings', lang),
+    desc: t('collections.writings.desc'),
+    // Traditional Reed Pen (Qalam) & Journal
+    iconSvg: `<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18.5 2.5L21.5 5.5L7.5 19.5H4.5V16.5L18.5 2.5Z" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 6L18 9" stroke-linecap="round" stroke-linejoin="round"/><path d="M4.5 19.5L2 22" stroke-linecap="round"/></svg>`,
+  },
 ];
 ---
 
@@ -46,54 +87,76 @@ const collectionStats = [
     schemaType: 'website',
   }}
 >
-  <!-- Hero Section -->
-  <section class="text-center py-10 md:py-20 relative">
-    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium bg-[var(--accent-gold-subtle)] text-[var(--accent-gold)] border border-[var(--accent-gold)]/30 mb-6">
-      <span class="arabic-text text-sm" dir="rtl" lang="ar">{t('hero.badge')}</span>
-    </div>
+  <!-- Hero Section: Quiet Islamic Editorial Canvas -->
+  <section class="relative text-center py-12 sm:py-16 md:py-24 rounded-3xl overflow-hidden mb-12 sm:mb-16 border border-[var(--border-subtle)] bg-gradient-to-b from-[var(--bg-subtle)]/60 via-[var(--bg-base)] to-[var(--bg-base)]">
+    <!-- Faint 8-fold Islamic Geometric Background Pattern -->
+    <GeometricPattern variant="hero-backdrop" />
 
-    <h1 class="font-serif text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-[var(--text-primary)] max-w-3xl mx-auto leading-tight">
-      {t('site.title')}
-    </h1>
+    <!-- Ambient Noor / Spiritual Light Breathing Glow -->
+    <div class="ambient-light-glow absolute inset-0 z-0" aria-hidden="true"></div>
 
-    <p class="font-serif italic text-lg sm:text-2xl text-[var(--text-secondary)] mt-4 max-w-2xl mx-auto leading-relaxed">
-      "{t('site.tagline')}"
-    </p>
+    <div class="relative z-10 max-w-3xl mx-auto px-4 sm:px-6">
+      <!-- Spiritual Bismillah Header Badge with Light Pulse Animation -->
+      <div class="animate-fade-in-1 mb-6">
+        <div class="animate-light-pulse inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-medium bg-[var(--accent-gold-subtle)]/80 text-[var(--accent-gold)] border border-[var(--accent-gold)]/35 shadow-xs select-none">
+          <span class="arabic-text text-sm sm:text-base tracking-wide" dir="rtl" lang="ar">
+            {t('hero.badge')}
+          </span>
+        </div>
+      </div>
 
-    <p class="text-sm sm:text-base text-[var(--text-muted)] mt-4 max-w-xl mx-auto leading-relaxed">
-      {t('hero.subtext')}
-    </p>
+      <!-- Main Editorial Title with Gentle Entrance -->
+      <h1 class="animate-fade-in-2 font-serif text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-[var(--text-primary)] leading-[1.15]">
+        {t('site.title')}
+      </h1>
 
-    <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
-      <a
-        href={getLocalizedPath('/search', lang)}
-        class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[var(--text-primary)] text-[var(--bg-base)] hover:bg-[var(--accent-gold)] transition-colors text-sm font-medium shadow-sm"
-      >
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-        </svg>
-        {t('hero.searchBtn')}
-      </a>
-      <a
-        href={getLocalizedPath('/about', lang)}
-        class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-[var(--border-subtle)] hover:border-[var(--accent-gold)] transition-colors text-sm font-medium shadow-xs"
-      >
-        {t('hero.aboutBtn')}
-      </a>
+      <!-- Elegant Tagline -->
+      <p class="animate-fade-in-3 font-serif italic text-lg sm:text-2xl text-[var(--text-secondary)] mt-4 leading-relaxed max-w-2xl mx-auto">
+        "{t('site.tagline')}"
+      </p>
+
+      <!-- Purpose & Sakina Subtext -->
+      <p class="animate-fade-in-3 text-sm sm:text-base text-[var(--text-muted)] mt-5 max-w-xl mx-auto leading-relaxed">
+        {t('hero.subtext')}
+      </p>
+
+      <!-- Primary & Secondary Actions -->
+      <div class="animate-fade-in-4 mt-8 sm:mt-10 flex flex-wrap items-center justify-center gap-3">
+        <a
+          href="#collections"
+          class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[var(--primary-accent)] hover:bg-[var(--primary-accent-hover)] text-white dark:text-[var(--bg-base)] transition-all duration-300 text-sm font-medium shadow-sm hover:shadow-md hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-gold)]"
+        >
+          <span>{lang === 'bn' ? 'সংগ্রহশালা অন্বেষণ করুন' : 'Explore the Collections'}</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </a>
+
+        <a
+          href={getLocalizedPath('/search', lang)}
+          class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-[var(--border-subtle)] hover:border-[var(--accent-gold)] transition-all duration-300 text-sm font-medium shadow-xs hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-gold)]"
+        >
+          <svg class="w-4 h-4 text-[var(--accent-gold)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+          {t('hero.searchBtn')}
+        </a>
+      </div>
     </div>
   </section>
 
-  <!-- Featured Entry Block -->
+  <!-- Featured Entry Section with Meditative Rosette Drift & Shimmer Line -->
   {featuredEntry && (
-    <section class="my-12" aria-labelledby="featured-entry-heading">
-      <div class="flex items-center justify-between mb-6">
-        <div class="flex items-center gap-2">
-          <span class="w-2.5 h-2.5 rounded-full bg-[var(--accent-gold)] animate-pulse"></span>
+    <section class="my-12 sm:my-16" aria-labelledby="featured-entry-heading">
+      <div class="relative flex items-center justify-between mb-6 pb-2 border-b border-[var(--border-subtle)]">
+        <div class="absolute bottom-0 left-0 right-0 h-[1.5px] shimmer-light-line" aria-hidden="true"></div>
+        <div class="flex items-center gap-2.5">
+          <GeometricPattern variant="rosette" size={16} animate={true} />
           <h2 id="featured-entry-heading" class="text-xs font-bold uppercase tracking-wider text-[var(--accent-gold)]">
             {t('featured.title')}
           </h2>
         </div>
-        <span class="text-xs text-[var(--text-muted)]">{t('featured.subtitle')}</span>
+        <span class="text-xs text-[var(--text-muted)] font-sans">{t('featured.subtitle')}</span>
       </div>
 
       <div class="relative">
@@ -107,17 +170,20 @@ const collectionStats = [
     </section>
   )}
 
-  <!-- Section Portals -->
-  <section class="my-16" aria-labelledby="collections-heading">
+  <!-- Delicate Section Divider -->
+  <GeometricPattern variant="divider" />
+
+  <!-- Explore Collections Section (No emojis; bespoke vector motifs) -->
+  <section id="collections" class="my-12 sm:my-16 scroll-mt-20" aria-labelledby="collections-heading">
     <div class="flex items-center justify-between mb-8 border-b border-[var(--border-subtle)] pb-4">
       <div>
-        <h2 id="collections-heading" class="font-serif text-2xl font-bold text-[var(--text-primary)]">
+        <h2 id="collections-heading" class="font-serif text-2xl sm:text-3xl font-bold text-[var(--text-primary)]">
           {t('collections.title')}
         </h2>
-        <p class="text-sm text-[var(--text-muted)] mt-1">{t('collections.subtitle')}</p>
+        <p class="text-xs sm:text-sm text-[var(--text-muted)] mt-1">{t('collections.subtitle')}</p>
       </div>
-      <a href={getLocalizedPath('/tags', lang)} class="text-xs font-medium text-[var(--accent-gold)] hover:underline hidden sm:inline-block">
-        {t('collections.browseTags')}
+      <a href={getLocalizedPath('/tags', lang)} class="text-xs font-medium text-[var(--primary-accent)] dark:text-[var(--accent-gold)] hover:underline hidden sm:inline-flex items-center gap-1">
+        <span>{t('collections.browseTags')}</span>
       </a>
     </div>
 
@@ -125,18 +191,23 @@ const collectionStats = [
       {collectionStats.map((col) => (
         <a
           href={col.href}
-          class="group flex flex-col justify-between p-5 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] hover:border-[var(--accent-gold)]/60 transition-all duration-200 shadow-[var(--card-shadow)] hover:-translate-y-1"
+          class="group flex flex-col justify-between p-5 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] hover:border-[var(--accent-gold)]/50 transition-all duration-300 shadow-[var(--card-shadow)] hover:shadow-[var(--card-shadow-hover)] hover:-translate-y-1"
         >
           <div>
-            <div class="text-2xl mb-3">{col.icon}</div>
-            <h3 class="font-serif font-semibold text-base text-[var(--text-primary)] group-hover:text-[var(--accent-gold)] transition-colors">
+            <!-- Custom Vector Emblem -->
+            <div class="w-10 h-10 rounded-xl bg-[var(--accent-gold-subtle)]/70 text-[var(--primary-accent)] dark:text-[var(--accent-gold)] border border-[var(--accent-gold)]/20 flex items-center justify-center mb-3.5 group-hover:scale-105 transition-transform duration-300">
+              <Fragment set:html={col.iconSvg} />
+            </div>
+            
+            <h3 class="font-serif font-semibold text-base text-[var(--text-primary)] group-hover:text-[var(--primary-accent)] dark:group-hover:text-[var(--accent-gold)] transition-colors">
               {col.label}
             </h3>
-            <p class="text-xs text-[var(--text-muted)] mt-1.5 leading-relaxed">
+            <p class="text-xs text-[var(--text-muted)] mt-1.5 leading-relaxed line-clamp-2">
               {col.desc}
             </p>
           </div>
-          <div class="mt-4 pt-3 border-t border-[var(--border-subtle)]/60 flex items-center justify-between text-xs text-[var(--text-muted)]">
+
+          <div class="mt-4 pt-3 border-t border-[var(--border-subtle)]/70 flex items-center justify-between text-xs text-[var(--text-muted)]">
             <span>{col.count} {col.count === 1 ? t('card.entry') : t('card.entries')}</span>
             <span class="text-[var(--accent-gold)] group-hover:translate-x-1 transition-transform">→</span>
           </div>
@@ -146,15 +217,15 @@ const collectionStats = [
   </section>
 
   <!-- Latest Entries Across All Collections -->
-  <section class="my-16" aria-labelledby="latest-entries-heading">
+  <section class="my-12 sm:my-16" aria-labelledby="latest-entries-heading">
     <div class="flex items-center justify-between mb-8 border-b border-[var(--border-subtle)] pb-4">
       <div>
-        <h2 id="latest-entries-heading" class="font-serif text-2xl font-bold text-[var(--text-primary)]">
+        <h2 id="latest-entries-heading" class="font-serif text-2xl sm:text-3xl font-bold text-[var(--text-primary)]">
           {t('recent.title')}
         </h2>
-        <p class="text-sm text-[var(--text-muted)] mt-1">{t('recent.subtitle')}</p>
+        <p class="text-xs sm:text-sm text-[var(--text-muted)] mt-1">{t('recent.subtitle')}</p>
       </div>
-      <a href={getLocalizedPath('/search', lang)} class="text-xs font-medium text-[var(--accent-gold)] hover:underline">
+      <a href={getLocalizedPath('/search', lang)} class="text-xs font-medium text-[var(--primary-accent)] dark:text-[var(--accent-gold)] hover:underline inline-flex items-center gap-1">
         {t('recent.searchAll')}
       </a>
     </div>
@@ -170,20 +241,23 @@ const collectionStats = [
     </div>
   </section>
 
-  <!-- About Teaser -->
-  <section class="my-16 p-8 sm:p-12 rounded-3xl bg-[var(--bg-subtle)]/70 border border-[var(--border-subtle)] text-center relative overflow-hidden">
-    <div class="max-w-2xl mx-auto space-y-4">
-      <div class="text-[var(--accent-gold)] text-3xl font-serif">✦</div>
+  <!-- Quiet Closing Invitation / About Teaser -->
+  <section class="my-16 p-8 sm:p-12 rounded-3xl bg-gradient-to-b from-[var(--bg-subtle)]/80 to-[var(--bg-subtle)]/40 border border-[var(--border-subtle)] text-center relative overflow-hidden">
+    <div class="max-w-2xl mx-auto space-y-4 relative z-10">
+      <GeometricPattern variant="rosette" size={24} class="mx-auto text-[var(--accent-gold)]" />
+      
       <h2 class="font-serif text-2xl sm:text-3xl font-bold text-[var(--text-primary)]">
         {t('aboutTeaser.title')}
       </h2>
+      
       <p class="text-sm sm:text-base text-[var(--text-secondary)] leading-relaxed">
         {t('aboutTeaser.text')}
       </p>
-      <div class="pt-2">
+
+      <div class="pt-3">
         <a
           href={getLocalizedPath('/about', lang)}
-          class="inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--accent-gold)] hover:text-[var(--accent-gold-hover)] hover:underline"
+          class="inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--primary-accent)] dark:text-[var(--accent-gold)] hover:underline focus:outline-none focus-visible:underline"
         >
           <span>{t('aboutTeaser.link')}</span>
         </a>

@@ -4,47 +4,56 @@
 
 @layer base {
   :root {
-    --bg-base: #fbf9f4;
-    --bg-surface: #ffffff;
-    --bg-subtle: #f4efe4;
-    --text-primary: #122827;
-    --text-secondary: #4a5c5a;
-    --text-muted: #748381;
-    --border-subtle: #e8e1d3;
-    --border-strong: #d2c8b4;
-    --accent-gold: #b88d2d;
-    --accent-gold-hover: #9c7520;
-    --accent-gold-subtle: #f9f4e8;
-    --primary-teal: #103433;
-    --card-shadow: 0 4px 20px -2px rgba(18, 40, 39, 0.05);
+    /* Palette from Section 3: Quiet Islamic editorial design */
+    --bg-base: #FAF8F2;
+    --bg-surface: #FFFFFF;
+    --bg-subtle: #F0EEE4;
+    --text-primary: #25352C;
+    --text-secondary: #6D736A;
+    --text-muted: #858B82;
+    --border-subtle: #E6E2D7;
+    --border-strong: #D5D0C3;
+    --primary-accent: #355E49;
+    --primary-accent-hover: #284837;
+    --secondary-accent: #789078;
+    --accent-gold: #B79A60;
+    --accent-gold-hover: #9E834D;
+    --accent-gold-subtle: #F6F1E5;
+    --card-shadow: 0 4px 20px -2px rgba(37, 53, 44, 0.05), 0 1px 3px 0 rgba(37, 53, 44, 0.03);
+    --card-shadow-hover: 0 10px 30px -4px rgba(37, 53, 44, 0.08), 0 4px 6px -2px rgba(37, 53, 44, 0.04);
   }
 
   html.dark, :root.dark, body.dark {
-    --bg-base: #0a1117;
-    --bg-surface: #101c26;
-    --bg-subtle: #162432;
-    --text-primary: #f2eee5;
-    --text-secondary: #abbec5;
-    --text-muted: #788e99;
-    --border-subtle: #1e3243;
-    --border-strong: #2c445a;
-    --accent-gold: #deb453;
-    --accent-gold-hover: #f0c96c;
-    --accent-gold-subtle: #1a251f;
-    --primary-teal: #3ba79f;
-    --card-shadow: 0 4px 25px -2px rgba(0, 0, 0, 0.35);
+    /* Refined deep charcoal-green dark mode */
+    --bg-base: #121B16;
+    --bg-surface: #18231D;
+    --bg-subtle: #1F2D25;
+    --text-primary: #F4F1EA;
+    --text-secondary: #A6AFA6;
+    --text-muted: #7E897E;
+    --border-subtle: #27372E;
+    --border-strong: #364A3F;
+    --primary-accent: #5E8F72;
+    --primary-accent-hover: #75A589;
+    --secondary-accent: #8FA28F;
+    --accent-gold: #CBB27A;
+    --accent-gold-hover: #DBC591;
+    --accent-gold-subtle: #233128;
+    --card-shadow: 0 4px 25px -2px rgba(0, 0, 0, 0.45);
+    --card-shadow-hover: 0 10px 35px -4px rgba(0, 0, 0, 0.6);
   }
 
   body {
     background-color: var(--bg-base);
     color: var(--text-primary);
-    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-    transition: background-color 0.25s ease, color 0.25s ease;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    transition: background-color 0.3s cubic-bezier(0.16, 1, 0.3, 1), color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }
 
@@ -139,3 +148,187 @@ html[lang="bn"] h3 {
   left: 1rem;
   z-index: 9999;
 }
+
+/* Accessible focus visible indicators across interactive elements */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+summary:focus-visible {
+  outline: 2px solid var(--accent-gold);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Subtle Geometric Linework & Atmosphere Utilities */
+.bg-canvas-texture {
+  background-image: radial-gradient(circle at 50% 0%, rgba(183, 154, 96, 0.04) 0%, transparent 60%),
+                    radial-gradient(circle at 100% 100%, rgba(53, 94, 73, 0.03) 0%, transparent 50%);
+}
+
+.dark .bg-canvas-texture {
+  background-image: radial-gradient(circle at 50% 0%, rgba(203, 178, 122, 0.04) 0%, transparent 60%),
+                    radial-gradient(circle at 100% 100%, rgba(94, 143, 114, 0.03) 0%, transparent 50%);
+}
+
+/* Subtle corner motifs and decorative borders */
+.islamic-card {
+  position: relative;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 1rem;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.islamic-card:hover {
+  border-color: rgba(183, 154, 96, 0.45);
+  box-shadow: var(--card-shadow-hover);
+  transform: translateY(-2px);
+}
+
+/* Editorial divider */
+.editorial-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin: 3rem 0;
+  color: var(--accent-gold);
+  opacity: 0.6;
+}
+
+.editorial-divider::before,
+.editorial-divider::after {
+  content: "";
+  height: 1px;
+  flex: 1;
+  background: linear-gradient(to right, transparent, var(--border-subtle), transparent);
+}
+
+/* Gentle entrance animations with staggered delays */
+@keyframes fadeInUpSubtle {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-1 {
+  animation: fadeInUpSubtle 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.05s both;
+}
+
+.animate-fade-in-2 {
+  animation: fadeInUpSubtle 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both;
+}
+
+.animate-fade-in-3 {
+  animation: fadeInUpSubtle 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.25s both;
+}
+
+.animate-fade-in-4 {
+  animation: fadeInUpSubtle 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.35s both;
+}
+
+/* Light meditative rotation for decorative Islamic astrolabes and rosettes */
+@keyframes slowDriftRotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-meditative {
+  animation: slowDriftRotate 90s linear infinite;
+  transform-origin: center;
+}
+
+/* Gentle ambient breathing/light animation for spiritual badges and medallions */
+@keyframes gentleLightPulse {
+  0%, 100% {
+    opacity: 0.9;
+    box-shadow: 0 0 0 0 rgba(183, 154, 96, 0);
+  }
+  50% {
+    opacity: 1;
+    box-shadow: 0 0 20px 4px rgba(183, 154, 96, 0.28);
+  }
+}
+
+.animate-light-pulse {
+  animation: gentleLightPulse 4s ease-in-out infinite;
+}
+
+/* Ambient Noor / spiritual light breathing effect behind Hero sections */
+@keyframes ambientLightBreathe {
+  0%, 100% {
+    opacity: 0.45;
+    transform: scale(0.98);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.03);
+  }
+}
+
+.ambient-light-glow {
+  background: radial-gradient(circle at 50% 35%, rgba(183, 154, 96, 0.16) 0%, rgba(53, 94, 73, 0.08) 45%, transparent 70%);
+  animation: ambientLightBreathe 8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+:is(.dark .ambient-light-glow) {
+  background: radial-gradient(circle at 50% 35%, rgba(206, 178, 122, 0.14) 0%, rgba(77, 128, 102, 0.08) 50%, transparent 75%);
+}
+
+/* Soft shimmer light effect across featured borders */
+@keyframes borderLightShimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.shimmer-light-line {
+  background: linear-gradient(90deg, transparent 0%, rgba(183, 154, 96, 0.7) 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: borderLightShimmer 6s ease-in-out infinite;
+}
+
+/* Respect Reduced Motion Preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  .islamic-card:hover {
+    transform: none !important;
+  }
+  
+  .animate-fade-in-1,
+  .animate-fade-in-2,
+  .animate-fade-in-3,
+  .animate-fade-in-4,
+  .animate-spin-meditative,
+  .animate-light-pulse,
+  .ambient-light-glow,
+  .shimmer-light-line {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+

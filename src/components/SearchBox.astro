@@ -118,17 +118,17 @@ const {
 
     if (resultsContainer) {
       resultsContainer.innerHTML = loadedData.map(item => `
-        <article class="p-5 sm:p-6 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] hover:border-[var(--accent-gold)]/60 transition-all shadow-[var(--card-shadow)]">
-          <a href="${item.url}" class="group block">
-            <h3 class="font-serif text-lg font-semibold text-[var(--text-primary)] group-hover:text-[var(--accent-gold)] transition-colors mb-2">
+        <article class="p-5 sm:p-6 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] hover:border-[var(--accent-gold)]/50 transition-all duration-300 shadow-[var(--card-shadow)] hover:shadow-[var(--card-shadow-hover)] hover:-translate-y-0.5">
+          <a href="${item.url}" class="group block focus:outline-none focus-visible:underline">
+            <h3 class="font-serif text-lg font-semibold text-[var(--text-primary)] group-hover:text-[var(--primary-accent)] dark:group-hover:text-[var(--accent-gold)] transition-colors mb-2">
               ${item.meta?.title || 'Untitled Entry'}
             </h3>
             <p class="text-xs sm:text-sm text-[var(--text-secondary)] leading-relaxed line-clamp-3">
               ${item.excerpt}
             </p>
-            <div class="mt-3 flex items-center gap-2 text-xs text-[var(--accent-gold)] font-medium">
+            <div class="mt-3 flex items-center gap-1.5 text-xs text-[var(--primary-accent)] dark:text-[var(--accent-gold)] font-medium">
               <span>Read reflection</span>
-              <span>→</span>
+              <span class="group-hover:translate-x-1 transition-transform">→</span>
             </div>
           </a>
         </article>

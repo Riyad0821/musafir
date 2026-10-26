@@ -5,9 +5,11 @@ import ArabicBlock from '../../../components/ArabicBlock.astro';
 import SourceList from '../../../components/SourceList.astro';
 import TagList from '../../../components/TagList.astro';
 import RelatedEntries from '../../../components/RelatedEntries.astro';
+import GeometricPattern from '../../../components/GeometricPattern.astro';
 import { getCollection, render } from 'astro:content';
 import { useTranslations, getLocalizedPath } from '../../../i18n/utils';
 import type { SupportedLocale } from '../../../i18n/ui';
+
 
 export async function getStaticPaths() {
   const [ayat, hadith, events, sahaba, writings] = await Promise.all([
@@ -137,15 +139,16 @@ const formattedDate = data.dateAdded ? new Date(data.dateAdded).toLocaleDateStri
       <div class="flex items-center gap-3 text-xs mb-3 flex-wrap">
         <a
           href={collectionUrl}
-          class="inline-flex items-center px-2.5 py-0.5 rounded-full font-medium bg-[var(--accent-gold-subtle)] text-[var(--accent-gold)] border border-[var(--accent-gold)]/30 hover:underline"
+          class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full font-medium bg-[var(--accent-gold-subtle)] text-[var(--accent-gold)] border border-[var(--accent-gold)]/30 hover:underline"
         >
-          {collectionLabel}
+          <GeometricPattern variant="rosette" size={12} class="opacity-80" />
+          <span>{collectionLabel}</span>
         </a>
         {data.featured && (
-          <span class="text-xs text-[var(--accent-gold)] font-medium">{t('featured.badge')}</span>
+          <span class="text-xs text-[var(--accent-gold)] font-medium">★ {t('featured.badge')}</span>
         )}
         {formattedDate && (
-          <time datetime={data.dateAdded?.toISOString?.()} class="text-[var(--text-muted)]">
+          <time datetime={data.dateAdded?.toISOString?.()} class="text-[var(--text-muted)] font-sans">
             {formattedDate}
           </time>
         )}
@@ -156,7 +159,7 @@ const formattedDate = data.dateAdded ? new Date(data.dateAdded).toLocaleDateStri
       </h1>
 
       {displaySubtitle && (
-        <p class="font-serif italic text-base sm:text-xl text-[var(--text-secondary)] mt-2">
+        <p class="font-serif italic text-base sm:text-xl text-[var(--text-secondary)] mt-2.5">
           {displaySubtitle}
         </p>
       )}
@@ -169,8 +172,11 @@ const formattedDate = data.dateAdded ? new Date(data.dateAdded).toLocaleDateStri
         <ArabicBlock text={data.arabic} sourceLabel={`Surah ${data.surah} (${data.surahNumber}:${data.ayahFrom})`} size="featured" />
 
         <!-- Translation Block -->
-        <div class="p-6 sm:p-8 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] shadow-[var(--card-shadow)]">
-          <h2 class="text-xs font-semibold uppercase tracking-wider text-[var(--accent-gold)] mb-3">
+        <div class="p-6 sm:p-8 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] border-l-4 border-l-[var(--accent-gold)] shadow-[var(--card-shadow)] relative overflow-hidden">
+          <div class="absolute top-2 right-2 pointer-events-none select-none">
+            <GeometricPattern variant="corner" class="rotate-90 opacity-20" />
+          </div>
+          <h2 class="text-xs font-semibold uppercase tracking-wider text-[var(--primary-accent)] dark:text-[var(--accent-gold)] mb-3">
             {lang === 'bn' ? 'অনুবাদ' : 'Translation'} ({lang === 'bn' && data.translationSourceBn ? data.translationSourceBn : data.translationSource})
           </h2>
           <blockquote class="font-serif text-lg sm:text-xl text-[var(--text-primary)] leading-relaxed italic">
@@ -199,8 +205,11 @@ const formattedDate = data.dateAdded ? new Date(data.dateAdded).toLocaleDateStri
         )}
 
         <!-- Translation -->
-        <div class="p-6 sm:p-8 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] shadow-[var(--card-shadow)]">
-          <h2 class="text-xs font-semibold uppercase tracking-wider text-[var(--accent-gold)] mb-3">
+        <div class="p-6 sm:p-8 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] border-l-4 border-l-[var(--accent-gold)] shadow-[var(--card-shadow)] relative overflow-hidden">
+          <div class="absolute top-2 right-2 pointer-events-none select-none">
+            <GeometricPattern variant="corner" class="rotate-90 opacity-20" />
+          </div>
+          <h2 class="text-xs font-semibold uppercase tracking-wider text-[var(--primary-accent)] dark:text-[var(--accent-gold)] mb-3">
             {lang === 'bn' ? 'অনুবাদ' : 'Translation'}
           </h2>
           <blockquote class="font-serif text-lg sm:text-xl text-[var(--text-primary)] leading-relaxed italic">

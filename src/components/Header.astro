@@ -12,8 +12,8 @@ const cleanPath = stripLocaleFromPath(pathname);
 const navLinks = [
   { href: getLocalizedPath('/ayat', lang), raw: '/ayat', label: t('nav.ayat') },
   { href: getLocalizedPath('/hadith', lang), raw: '/hadith', label: t('nav.hadith') },
-  { href: getLocalizedPath('/events', lang), raw: '/events', label: t('nav.events') },
   { href: getLocalizedPath('/sahaba', lang), raw: '/sahaba', label: t('nav.sahaba') },
+  { href: getLocalizedPath('/events', lang), raw: '/events', label: t('nav.events') },
   { href: getLocalizedPath('/writings', lang), raw: '/writings', label: t('nav.writings') },
   { href: getLocalizedPath('/tags', lang), raw: '/tags', label: t('nav.tags') },
   { href: getLocalizedPath('/about', lang), raw: '/about', label: t('nav.about') },
@@ -30,8 +30,8 @@ const isLinkActive = (raw: string) => {
 ---
 
 <header class="sticky top-0 z-40 w-full backdrop-blur-md bg-[var(--bg-base)]/90 border-b border-[var(--border-subtle)] transition-colors">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between gap-4">
-    <!-- Logo -->
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+    <!-- Brand Logo -->
     <Logo showTagline={false} />
 
     <!-- Desktop Nav Links -->
@@ -41,10 +41,10 @@ const isLinkActive = (raw: string) => {
         return (
           <a
             href={link.href}
-            class={`px-3 py-1.5 rounded-md transition-colors ${
+            class={`px-3 py-1.5 rounded-lg text-sm transition-all duration-200 ${
               active
-                ? 'text-[var(--accent-gold)] font-semibold bg-[var(--accent-gold-subtle)]/70'
-                : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-subtle)]'
+                ? 'text-[var(--primary-accent)] dark:text-[var(--accent-gold)] font-semibold bg-[var(--accent-gold-subtle)]'
+                : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-subtle)]/60'
             }`}
             aria-current={active ? 'page' : undefined}
           >
@@ -54,41 +54,41 @@ const isLinkActive = (raw: string) => {
       })}
     </nav>
 
-    <!-- Header Actions: Language Switcher, Search, Theme Toggle, Mobile Hamburger -->
-    <div class="flex items-center gap-2">
-      <!-- Language Switcher -->
-      <LanguagePicker />
-
+    <!-- Header Actions -->
+    <div class="flex items-center gap-1.5 sm:gap-2">
       <!-- Search Link Button -->
       <a
         href={searchHref}
-        class={`p-2 rounded-lg text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--accent-gold)] ${
-          cleanPath === '/search' ? 'text-[var(--accent-gold)] bg-[var(--accent-gold-subtle)]' : ''
+        class={`p-2 rounded-lg text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-gold)] ${
+          cleanPath === '/search' ? 'text-[var(--primary-accent)] dark:text-[var(--accent-gold)] bg-[var(--accent-gold-subtle)]' : ''
         }`}
         aria-label={t('nav.search')}
         title={t('search.title')}
       >
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <svg class="w-4 h-4 sm:w-4.5 sm:h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
         </svg>
       </a>
 
-      <!-- Theme Toggle -->
+      <!-- Language Switcher -->
+      <LanguagePicker />
+
+      <!-- Theme Switcher -->
       <ThemeToggle />
 
       <!-- Mobile Menu Button -->
       <button
         id="mobile-menu-toggle"
         type="button"
-        class="lg:hidden p-2 rounded-lg text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-gold)]"
+        class="lg:hidden p-2 rounded-lg text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-gold)]"
         aria-label="Toggle navigation menu"
         aria-expanded="false"
         aria-controls="mobile-menu"
       >
-        <svg id="hamburger-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <svg id="hamburger-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
         </svg>
-        <svg id="close-icon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <svg id="close-icon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
         </svg>
       </button>
@@ -98,14 +98,14 @@ const isLinkActive = (raw: string) => {
   <!-- Mobile Drawer / Dropdown -->
   <div
     id="mobile-menu"
-    class="lg:hidden hidden border-b border-[var(--border-subtle)] bg-[var(--bg-surface)] px-4 pt-3 pb-6 transition-all"
+    class="lg:hidden hidden border-b border-[var(--border-subtle)] bg-[var(--bg-surface)] px-4 pt-3 pb-6 transition-all shadow-md"
   >
     <nav class="flex flex-col gap-1" aria-label="Mobile navigation">
       <a
         href={homeHref}
-        class={`px-3 py-2.5 rounded-lg text-base font-medium transition-colors ${
+        class={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
           cleanPath === '/'
-            ? 'text-[var(--accent-gold)] bg-[var(--accent-gold-subtle)] font-semibold'
+            ? 'text-[var(--primary-accent)] dark:text-[var(--accent-gold)] bg-[var(--accent-gold-subtle)] font-semibold'
             : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-subtle)]'
         }`}
       >
@@ -116,9 +116,9 @@ const isLinkActive = (raw: string) => {
         return (
           <a
             href={link.href}
-            class={`px-3 py-2.5 rounded-lg text-base font-medium transition-colors ${
+            class={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
               active
-                ? 'text-[var(--accent-gold)] bg-[var(--accent-gold-subtle)] font-semibold'
+                ? 'text-[var(--primary-accent)] dark:text-[var(--accent-gold)] bg-[var(--accent-gold-subtle)] font-semibold'
                 : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-subtle)]'
             }`}
             aria-current={active ? 'page' : undefined}
@@ -129,13 +129,13 @@ const isLinkActive = (raw: string) => {
       })}
       <a
         href={searchHref}
-        class={`px-3 py-2.5 rounded-lg text-base font-medium flex items-center gap-2 transition-colors ${
+        class={`px-3 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition-colors ${
           cleanPath === '/search'
-            ? 'text-[var(--accent-gold)] bg-[var(--accent-gold-subtle)] font-semibold'
+            ? 'text-[var(--primary-accent)] dark:text-[var(--accent-gold)] bg-[var(--accent-gold-subtle)] font-semibold'
             : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-subtle)]'
         }`}
       >
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
         </svg>
         {t('nav.search')}
@@ -171,6 +171,18 @@ const isLinkActive = (raw: string) => {
           hamburgerIcon.classList.remove('hidden');
           closeIcon.classList.add('hidden');
         }
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !menu.classList.contains('hidden')) {
+        menu.classList.add('hidden');
+        btn.setAttribute('aria-expanded', 'false');
+        if (hamburgerIcon && closeIcon) {
+          hamburgerIcon.classList.remove('hidden');
+          closeIcon.classList.add('hidden');
+        }
+        btn.focus();
       }
     });
   }

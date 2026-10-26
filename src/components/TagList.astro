@@ -14,8 +14,8 @@ const lang = getLangFromUrl(Astro.url);
 const tagRecord = tagsData as Record<string, { name: string; nameBn?: string; description: string; descriptionBn?: string }>;
 
 const sizeClasses = {
-  sm: 'text-xs px-2.5 py-1',
-  md: 'text-sm px-3 py-1.5',
+  sm: 'text-xs px-2.5 py-0.5',
+  md: 'text-xs sm:text-sm px-3.5 py-1',
 }[size];
 ---
 
@@ -28,7 +28,7 @@ const sizeClasses = {
       return (
         <a
           href={targetUrl}
-          class={`inline-flex items-center gap-1 rounded-full font-medium transition-colors bg-[var(--bg-subtle)] text-[var(--text-secondary)] hover:bg-[var(--accent-gold-subtle)] hover:text-[var(--accent-gold)] border border-[var(--border-subtle)]/70 ${sizeClasses}`}
+          class={`inline-flex items-center gap-1 rounded-full font-medium transition-colors bg-[var(--bg-subtle)] text-[var(--text-secondary)] hover:bg-[var(--accent-gold-subtle)] hover:text-[var(--accent-gold)] hover:border-[var(--accent-gold)]/40 border border-[var(--border-subtle)] ${sizeClasses}`}
         >
           <span class="text-[var(--accent-gold)] opacity-70">#</span>
           <span>{displayName}</span>

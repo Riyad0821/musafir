@@ -1,5 +1,6 @@
 ---
 import Logo from './Logo.astro';
+import GeometricPattern from './GeometricPattern.astro';
 import { SITE_CONFIG } from '../config';
 import { getLangFromUrl, useTranslations, getLocalizedPath } from '../i18n/utils';
 
@@ -8,7 +9,10 @@ const t = useTranslations(lang);
 const currentYear = new Date().getFullYear();
 ---
 
-<footer class="mt-auto border-t border-[var(--border-subtle)] bg-[var(--bg-subtle)]/40 text-sm transition-colors">
+<footer class="mt-auto border-t border-[var(--border-subtle)] bg-[var(--bg-subtle)]/45 text-sm transition-colors relative overflow-hidden">
+  <!-- Subtle decorative top accent -->
+  <div class="h-0.5 w-full bg-gradient-to-r from-transparent via-[var(--accent-gold)]/30 to-transparent"></div>
+
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
     <div class="grid grid-cols-1 md:grid-cols-4 gap-8 lg:gap-12 mb-12">
       <!-- Col 1: Brand & Tagline -->
@@ -17,44 +21,44 @@ const currentYear = new Date().getFullYear();
         <p class="text-[var(--text-secondary)] text-sm leading-relaxed max-w-md">
           {t('site.tagline')}
         </p>
-        <p class="text-[var(--text-muted)] text-xs leading-relaxed max-w-md border-l-2 border-[var(--accent-gold)] pl-3">
+        <p class="text-[var(--text-muted)] text-xs leading-relaxed max-w-md border-l-2 border-[var(--accent-gold)]/60 pl-3">
           <strong>{t('footer.note')}</strong> {t('footer.disclaimer')}
         </p>
       </div>
 
       <!-- Col 2: Collections -->
       <div>
-        <h2 class="text-xs font-semibold uppercase tracking-wider text-[var(--text-primary)] mb-3">
+        <h2 class="text-xs font-semibold uppercase tracking-wider text-[var(--primary-accent)] dark:text-[var(--accent-gold)] mb-3">
           {t('collections.title')}
         </h2>
-        <ul class="space-y-2 text-[var(--text-secondary)]">
-          <li><a href={getLocalizedPath('/ayat', lang)} class="hover:text-[var(--accent-gold)] transition-colors">{t('collections.ayat.label')}</a></li>
-          <li><a href={getLocalizedPath('/hadith', lang)} class="hover:text-[var(--accent-gold)] transition-colors">{t('collections.hadith.label')}</a></li>
-          <li><a href={getLocalizedPath('/events', lang)} class="hover:text-[var(--accent-gold)] transition-colors">{t('collections.events.label')}</a></li>
-          <li><a href={getLocalizedPath('/sahaba', lang)} class="hover:text-[var(--accent-gold)] transition-colors">{t('collections.sahaba.label')}</a></li>
-          <li><a href={getLocalizedPath('/writings', lang)} class="hover:text-[var(--accent-gold)] transition-colors">{t('collections.writings.label')}</a></li>
+        <ul class="space-y-2 text-[var(--text-secondary)] text-xs sm:text-sm">
+          <li><a href={getLocalizedPath('/ayat', lang)} class="hover:text-[var(--primary-accent)] dark:hover:text-[var(--accent-gold)] transition-colors">{t('collections.ayat.label')}</a></li>
+          <li><a href={getLocalizedPath('/hadith', lang)} class="hover:text-[var(--primary-accent)] dark:hover:text-[var(--accent-gold)] transition-colors">{t('collections.hadith.label')}</a></li>
+          <li><a href={getLocalizedPath('/sahaba', lang)} class="hover:text-[var(--primary-accent)] dark:hover:text-[var(--accent-gold)] transition-colors">{t('collections.sahaba.label')}</a></li>
+          <li><a href={getLocalizedPath('/events', lang)} class="hover:text-[var(--primary-accent)] dark:hover:text-[var(--accent-gold)] transition-colors">{t('collections.events.label')}</a></li>
+          <li><a href={getLocalizedPath('/writings', lang)} class="hover:text-[var(--primary-accent)] dark:hover:text-[var(--accent-gold)] transition-colors">{t('collections.writings.label')}</a></li>
         </ul>
       </div>
 
       <!-- Col 3: Navigation & Feeds -->
       <div>
-        <h2 class="text-xs font-semibold uppercase tracking-wider text-[var(--text-primary)] mb-3">
+        <h2 class="text-xs font-semibold uppercase tracking-wider text-[var(--primary-accent)] dark:text-[var(--accent-gold)] mb-3">
           {t('nav.tags')} & {t('nav.about')}
         </h2>
-        <ul class="space-y-2 text-[var(--text-secondary)]">
-          <li><a href={getLocalizedPath('/tags', lang)} class="hover:text-[var(--accent-gold)] transition-colors">{t('nav.tags')}</a></li>
-          <li><a href={getLocalizedPath('/about', lang)} class="hover:text-[var(--accent-gold)] transition-colors">{t('nav.about')}</a></li>
-          <li><a href={getLocalizedPath('/search', lang)} class="hover:text-[var(--accent-gold)] transition-colors">{t('nav.search')}</a></li>
+        <ul class="space-y-2 text-[var(--text-secondary)] text-xs sm:text-sm">
+          <li><a href={getLocalizedPath('/tags', lang)} class="hover:text-[var(--primary-accent)] dark:hover:text-[var(--accent-gold)] transition-colors">{t('nav.tags')}</a></li>
+          <li><a href={getLocalizedPath('/about', lang)} class="hover:text-[var(--primary-accent)] dark:hover:text-[var(--accent-gold)] transition-colors">{t('nav.about')}</a></li>
+          <li><a href={getLocalizedPath('/search', lang)} class="hover:text-[var(--primary-accent)] dark:hover:text-[var(--accent-gold)] transition-colors">{t('nav.search')}</a></li>
           <li>
-            <a href="/rss.xml" class="inline-flex items-center gap-1.5 hover:text-[var(--accent-gold)] transition-colors">
-              <svg class="w-3.5 h-3.5 text-amber-500" fill="currentColor" viewBox="0 0 24 24">
+            <a href="/rss.xml" class="inline-flex items-center gap-1.5 hover:text-[var(--primary-accent)] dark:hover:text-[var(--accent-gold)] transition-colors">
+              <svg class="w-3.5 h-3.5 text-[var(--accent-gold)]" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1Z"/>
               </svg>
               RSS Feed
             </a>
           </li>
           <li>
-            <a href="/sitemap-index.xml" class="hover:text-[var(--accent-gold)] transition-colors">
+            <a href="/sitemap-index.xml" class="hover:text-[var(--primary-accent)] dark:hover:text-[var(--accent-gold)] transition-colors">
               Sitemap
             </a>
           </li>
@@ -64,12 +68,15 @@ const currentYear = new Date().getFullYear();
 
     <!-- Bottom Bar -->
     <div class="pt-8 border-t border-[var(--border-subtle)] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[var(--text-muted)]">
-      <p>© {currentYear} {SITE_CONFIG.name}. Built with Astro & Tailwind CSS.</p>
+      <div class="flex items-center gap-2">
+        <GeometricPattern variant="rosette" size={14} class="opacity-50" />
+        <p>© {currentYear} {SITE_CONFIG.name}. A sanctuary of beneficial remembrance.</p>
+      </div>
       
       <div class="flex items-center gap-4">
-        <a href="#top" class="hover:text-[var(--text-primary)] transition-colors inline-flex items-center gap-1" title={t('footer.backToTop')}>
-          {t('footer.backToTop')}
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <a href="#top" class="hover:text-[var(--text-primary)] transition-colors inline-flex items-center gap-1.5 font-medium" title={t('footer.backToTop')}>
+          <span>{t('footer.backToTop')}</span>
+          <svg class="w-3.5 h-3.5 text-[var(--accent-gold)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
           </svg>
         </a>
